@@ -1,0 +1,654 @@
+import React from 'react';
+import { render } from 'react-dom';
+import { __esModule } from 'react-script-tag/lib/ScriptTag';
+import Popup from './popup.js';
+
+import editIcon from '../img/edit.svg';
+import addIcon from '../img/add.svg';
+import removeIcon from '../img/remove.svg';
+
+const settings = {
+    hostURL: "http://127.0.0.1:5000/",
+}
+
+
+class ImageSizeCheckbox extends React.Component {
+    constructor(props) {
+        super(props);
+        this.active = true;
+    }
+
+
+    handleClick = () => {
+        let galleryImages = document.getElementsByClassName("picture-container");
+
+        let scale = this.active ? 1 : 2;
+
+        for (let j = 0; j < galleryImages.length; j++) {
+            galleryImages[j].classList.remove("size1", "size2");
+            galleryImages[j].classList.add("size" + scale);
+        }
+
+        let imageTitles = document.getElementsByClassName("title");
+        for (let i = 0; i < imageTitles.length; i++) {
+            imageTitles[i].style.display = this.active ? 'none' : 'block';
+        }
+
+        this.active = !this.active;
+    }
+
+    render() {
+        return (
+            <div className="image-size-toggle">
+                Small Images:
+                <label className="switch">
+                    <input type="checkbox" className="image-scale-checkbox" id="image-scale" onClick={this.handleClick} />
+                    <span class="slider"></span>
+                </label>
+            </div>
+        );
+    }
+}
+
+// Class to render image data
+class Image extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            imageData: {}
+        }
+        
+    }
+
+
+    handleClick = () => {
+        // Container for modal
+        let modal = document.getElementById("selected-image-modal");
+
+        // Modal img element
+        let modalImg = document.getElementById("modal-image");
+
+        // Container for image
+        let imageContainer = document.getElementById("ImageId:" + this.props.imageData.ImageId);
+        
+        // The selected img element
+        let image = imageContainer.childNodes[0];
+
+        modal.style.display = "block";
+        modalImg.src = image.src;
+        modal.childNodes[1].innerText = image.alt;
+
+        modal.childNodes[2].value = this.props.imageData.ImageId;
+        modal.childNodes[3].value = this.props.imageData.ImageId;
+
+        modal.classList.toggle("active");
+
+        // Close button
+        var closeButton = modal.childNodes[4];
+
+        // When the user clicks on <span> (x), close the modal
+        closeButton.onclick = function () {
+            modal.style.display = "none";
+        };
+    }
+
+    handleRemoveImage = (e) => {
+        let imageId = e.target.value;
+        let requestOptions = {
+            method: 'DELETE',
+            headers: { 'sessionId': localStorage.getItem('sessionId') }
+        }
+
+        fetch(settings.hostURL + 'Gallery/' + this.props.imageData.GalleryId + '/RemoveImage/' + imageId, requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.Result == 'Success') {
+                    document.getElementById("ImageId:" + imageId).style.display ='none';
+                } else { console.log("Error removing image"); }
+            })
+            .catch(console.log)
+    }
+
+
+    handleEditImage = (e) => {
+        return;
+    }
+
+
+
+    render() {
+        const { imageData } = this.props;
+        //this.setState(this.props);
+        return (
+            <div value={imageData.ImageId} id={"ImageId:" + imageData.ImageId}  className="picture-container size2" >
+                <img onClick={this.handleClick} className="gallery-image" src={imageData.URL} alt={imageData.Title} />
+                <span className="title">
+                    <input type="image" src={removeIcon} value={imageData.ImageId} onClick={this.handleRemoveImage} className="left"/>
+                    <span className="title-text">{imageData.Title}</span>
+                    <input type="image" src={editIcon} value={imageData.ImageId} onClick={this.handleEditImage} className="right" />
+                </span>
+            </div>
+        );
+    }
+
+}
+
+// Class to render a gallery and its images
+class Gallery extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            imageList: [{
+                // "Image": <None>,
+                // "ImageId": Int,
+                // "Title": <String>
+                // "URL": <String>
+            }],
+            isPopupOpen: false,
+            AddImageTitle: "",
+            AddImageURL: "",
+            AddImageMessage: "",
+
+            UpdateGalleryMessage: "",
+            isUpdatePopupOpen: false,
+            UpdateGalleryTitle: "",
+
+            RemoveGalleryMessage: "",
+            isRemovePopupOpen: false,
+
+            galleryTitle: this.props.galleryData.Title,
+            oldGalleryTitle: this.props.galleryData.Title,
+        }
+        this.isGalleryOpen = true;
+        this.galleryId = props.galleryData.GalleryId;
+    }
+
+
+
+    componentDidMount() {
+        const { galleryData } = this.props;
+        this.getGalleryImages(galleryData.GalleryId);
+    }
+
+    getGalleryImages(GalleryId) {
+        let requestOptions = {
+            method: 'GET',
+            headers: { 'sessionId': localStorage.getItem('sessionId') }
+        }
+
+        fetch(settings.hostURL + 'Gallery/' + GalleryId + '/Images', requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                if (data.Result == 'Success') {
+                    this.setState({ imageList: data.Message })
+                } else { this.setState({ imageList: null }) }
+            })
+            .catch(console.log)
+    }
+
+    togglePopup = () => {
+        this.setState({ isPopupOpen: !this.state.isPopupOpen, AddImageMessage: '', AddImageTitle: '', AddImageURL: ''});
+    }
+
+    toggleUpdatePopup = () => {
+        this.setState({ isUpdatePopupOpen: !this.state.isUpdatePopupOpen, UpdateGalleryMessage: '', UpdateGalleryTitle:'' });
+    }
+
+    toggleRemovePopup = (e) => {
+        this.setState({ isRemovePopupOpen: !this.state.isRemovePopupOpen, RemoveGalleryMessage: '' });
+    }
+
+    hideGallery() {
+        document.getElementById("GalleryId:" + this.galleryId).style.display = 'none';
+        
+    }
+
+    handleOnChange = (e) => {
+        let Title;
+        let URL;
+
+        if (e.target.name == "AddImageTitle") {
+            Title = e.target.value
+            this.setState({ AddImageTitle: Title });
+        }
+        if (e.target.name == "URL") {
+            URL = e.target.value
+            this.setState({ AddImageURL: URL });
+        }
+        if (e.target.name == "UpdateGalleryTitle") {
+            Title = e.target.value
+            console.log(Title);
+            this.setState({ galleryTitle: Title });
+        }
+    }
+
+
+    handleAddImageSubmit = (GalleryId) => {
+        if(this.state.AddImageTitle.length == 0) {
+            this.setState({AddImageMessage : "The title cannot be empty"});
+            return;
+        }
+        if(this.state.AddImageURL.length == 0) {
+            this.setState({AddImageMessage : "The URL cannot be empty"});
+            return;
+        }
+        let requestOptions = {
+            method: 'POST',
+            headers: {
+                'sessionId': localStorage.getItem('sessionId'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Title: this.state.AddImageTitle,
+                URL: this.state.AddImageURL,
+                Image: "",
+                PublicImageIndicator: "6"
+            })
+        }
+
+
+        fetch(settings.hostURL + 'Gallery/' + GalleryId + '/AddImage', requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                if (data.Result == 'Success') {
+                    console.log(data);
+                    let newImageList = this.state.imageList;
+                    newImageList.push(data.Message);
+
+                    this.setState({
+                        isPopupOpen: false,
+                        AddImageMessage: "Image Added sucessfully",
+                        imageList: newImageList
+                    });
+                } else {
+                    this.setState({ AddImageMessage: "Uanble to add image: " + data.Result });
+                }
+            })
+            .catch(console.log);
+
+        //const { galleryData } = this.props;
+        //this.getGalleryImages(galleryData.GalleryId);
+
+    }
+
+    handleUpdateGallerySubmit = (GalleryId) => {
+        if(this.state.galleryTitle.length == 0) {
+            this.setState({UpdateGalleryMessage : "The title cannot be empty"});
+            return;
+        }
+        let requestOptions = {
+            method: 'POST',
+            headers: {
+                'sessionId': localStorage.getItem('sessionId'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Title: this.state.galleryTitle,
+            })
+        }
+
+        fetch(settings.hostURL + 'UpdateGallery/' + GalleryId, requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.Result == 'Success') {
+                    for (let i = 0; i < data.Message.length; i++) {
+                        console.log("" + data.Message[i].GalleryId + ":" + this.props.galleryData.GalleryId + ":" + this.galleryId);
+                        if (data.Message[i].GalleryId == this.props.galleryData.GalleryId) {
+                            this.setState({
+                                galleryTitle: data.Message[i].Title,
+                                oldGalleryTitle: data.Message[i].Title,
+                            });
+                        }
+                    }
+                    
+                    this.setState({
+                        isUpdatePopupOpen: false
+                    });
+
+
+                } else {
+                    this.setState({ UpdateGalleryMessage: "Uanble to update gallery: " + data.Result });
+                }
+            })
+            .catch(console.log);
+    }
+
+    handleRemoveGallerySubmit = (GalleryId) => {
+        let requestOptions = {
+            method: 'POST',
+            headers: {
+                'sessionId': localStorage.getItem('sessionId'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Title: this.state.galleryTitle,
+            })
+        }
+
+        fetch(settings.hostURL + 'RemoveGallery/' + GalleryId, requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                if (data.Result == 'Success') {                    
+                    this.setState({
+                        isRemovePopupOpen: false
+                    });
+                    this.hideGallery();
+                } else {
+                    this.setState({ RemoveGalleryMessage: "Uanble to remove gallery: " + data.Result });
+                }
+            })
+            .catch(console.log);
+    }
+
+    toggleGallery = (e) => {
+        // This should probably run getImages for the gallery so we don't have to load all the images at first
+
+        // 
+        let content = e.target.parentNode;
+        content = content.nextElementSibling;
+
+        let galleryButton = e.target;
+
+        let areGalleryImagesSmall = document.getElementById("image-scale").checked;
+
+        while (content && content.tagName != "button") {
+
+            if (this.isGalleryOpen) {
+                galleryButton.classList.remove("active");
+
+                content.style.display = 'none';
+                content.style.maxHeight = '0%';
+
+                content.childNodes[1].style.display = 'none';
+            } else {
+                galleryButton.classList.add("active");
+                content.style.display = 'block';
+                content.style.maxHeight = '100%';
+
+                //content.childNodes[1].style.maxHeight = '100%';
+                
+                content.childNodes[1].style.display = !areGalleryImagesSmall ? 'block' : 'none';
+            }
+            content = content.nextElementSibling;
+        }
+        this.isGalleryOpen = !this.isGalleryOpen;
+
+    }
+
+    render() {
+        const { galleryData } = this.props;
+        let { imageList, isPopupOpen, AddImageMessage, isGalleryOpen, isUpdatePopupOpen,
+            UpdateGalleryMessage, galleryTitle, oldGalleryTitle, isRemovePopupOpen, RemoveGalleryMessage } = this.state;
+
+        return (
+            <div>
+                <div id={"GalleryId:" + galleryData.GalleryId} className="gallery-container">
+                    <div className="gallery-toggle-container">
+                        <button className="gallery-toggle" onClick={this.toggleGallery} >
+                            {oldGalleryTitle} <span class="image-count">[{imageList.length}]</span>
+                        {/* , ID:{galleryData.GalleryId}, Image Count:({galleryData.ImageCount}) */}
+                        </button>
+                        <button className="add-image" onClick={this.toggleRemovePopup} ><img src={removeIcon}/></button>
+                        <button className="add-image" onClick={this.togglePopup} ><img src={addIcon}/></button>
+                        <button className="add-image" onClick={this.toggleUpdatePopup} >
+                            <img src={editIcon}/>
+                        </button>
+                    </div>
+                    {imageList.map((image) => (
+                        <Image hidden={isGalleryOpen} key={image.ImageId} imageData={image} />
+                    ))}
+                </div>
+                <Popup key="AddImage" handleClose={this.togglePopup} isPopupOpen={isPopupOpen} content={
+                    <>
+                        <h3>Add Image:</h3>
+                        <label for="AddImageTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="AddImageTitle" required/><br />
+                        <label for="URL" >URL: </label><input maxLength="2000" onChange={this.handleOnChange} name="URL" required/><br />
+                        {/* Use () => because we want to run the function with that input, 
+                    rather than call the function here */}
+                        <button className="primary" type="submit" onClick={() => { this.handleAddImageSubmit(galleryData.GalleryId) }}>Save</button>
+                        <p className="error-message left popup">{AddImageMessage}</p>
+                    </>
+                } />
+                <Popup key="UpdateGallery" handleClose={this.toggleUpdatePopup} isPopupOpen={isUpdatePopupOpen} content={
+                    <>
+                        <h3>Update Gallery:</h3>
+                        <label for="UpdateGalleryTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="UpdateGalleryTitle" defaultValue={galleryTitle} required/><br />
+                        <button className="primary" type="submit" onClick={() => { this.handleUpdateGallerySubmit(galleryData.GalleryId) }}>Save</button>
+                        <p className="error-message left popup">{UpdateGalleryMessage}</p>
+                    </>
+                } />
+                <Popup key="RemoveGallery" handleClose={this.toggleRemovePopup} isPopupOpen={isRemovePopupOpen} content={
+                    <>
+                        <h3>Remove Gallery:</h3>
+                        <p className="left popup" >Are you sure you want to remove Gallery: {oldGalleryTitle}?</p>
+                        <button className="primary" type="submit" onClick={() => { this.handleRemoveGallerySubmit(galleryData.GalleryId) }}>Remove</button>
+                        <button className="secondary" type="submit" onClick={() => { this.toggleRemovePopup() }}>Cancel</button>
+                        <p className="error-message left popup">{RemoveGalleryMessage}</p>
+                    </>
+                } />
+            </div>
+        );
+    }
+}
+
+
+
+
+class GalleryPage extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            galleryList: [],
+            // "GalleryId": <int>,
+            // "ImageCount": <int>,
+            // "Title": <string>
+            AddGalleryMessage: "",
+            isAddPopupOpen: false,
+            AddGalleryTitle: "",
+        }
+    }
+
+
+    // Load galleries on page load
+    componentDidMount() {
+
+        // Fetch gallery information
+        let requestOptions = {
+            method: 'GET',
+            headers: {
+                //'Content-Type': 'application/json' ,
+                'sessionId': localStorage.getItem('sessionId'),
+            },
+        }
+
+        fetch(settings.hostURL + 'GetGallery/', requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                // If success, load the galleryList
+                if (data.Result == 'Success') {
+                    this.setState({ galleryList: data.Message })
+                } else { this.setState({ galleryList: null }) }
+            })
+            .catch(console.log)
+
+    }
+
+    handleAddGallerySubmit() {
+        if (this.state.AddGalleryTitle.length == 0) {
+            this.setState({
+                AddGalleryMessage: "The title cannot be empty",
+            })
+            return;
+        }
+        let requestOptions = {
+            method: 'POST',
+            headers: {
+                'sessionId': localStorage.getItem('sessionId'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Title: this.state.AddGalleryTitle,
+            })
+        }
+
+        fetch(settings.hostURL + 'AddGallery', requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.Result == 'Success') {
+                    this.setState({ 
+                        galleryList: data.Message, 
+                        isAddPopupOpen: false,
+                        AddGalleryMessage: ""});
+                    window.location.reload();
+                } else {
+                    this.setState({ AddGalleryMessage: "Uanble to add gallery: " + data.Result });
+                }
+            })
+            .catch(console.log);
+
+    }
+
+    toggleAddGalleryPopup = () => {
+        this.setState({ isAddPopupOpen: !this.state.isAddPopupOpen, AddGalleryMessage: '', AddGalleryTitle : '' });
+    }
+
+    handleOnChange = (e) => {
+        let Title;
+
+        if (e.target.name == "AddGalleryTitle") {
+            Title = e.target.value
+            this.setState({ AddGalleryTitle: Title });
+        }
+    }
+
+    render() {
+
+        // If there are any gallaries returned, add the gallery class
+        const { galleryList, isAddPopupOpen, AddGalleryMessage } = this.state;
+        if (galleryList) {
+            return (
+                <div className="page-container">
+                    <ImageSizeCheckbox />
+                    <h4>Number of galleries: {galleryList.length}</h4>
+                    <button className="primary" onClick={this.toggleAddGalleryPopup}>Add Gallery</button>
+                    {galleryList.map((gallery) => (
+                        <Gallery galleryData={gallery} />
+                    ))}
+                    <Popup handleClose={this.toggleAddGalleryPopup} isPopupOpen={isAddPopupOpen} content={
+                        <>
+                            <h3>Add Gallery:</h3>
+                            <label for="AddGalleryTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="AddGalleryTitle" /><br />
+                            <button className="primary" type="submit" onClick={() => { this.handleAddGallerySubmit() }}>Save</button>
+                            <p className="error-message left popup">{AddGalleryMessage}</p>
+                        </>
+                    } />
+                </div>
+            );
+        } else {
+            return (<><ImageSizeCheckbox /></>);
+        }
+    }
+}
+
+
+class ImageModal extends React.Component {
+    constructor(props) {
+        super(props);
+        this.ImageId = -1;
+    }
+
+    // componentDidMount() {
+    //     console.log("Mount");
+    //     document.getElementById("nextImage").addEventListener("keyup", function(e) {
+    //         console.log("button clicked");
+    //         if (e.code == "ArrowRight"){this.changeImage(1);}
+    //     })
+
+    //     console.log(document.getElementById("nextImage"));
+
+    //     document.getElementById("prevImage").addEventListener("keyup", function(e) {
+    //         console.log(e);
+    //         if (e.code == "ArrowLeft"){this.changeImage(-1);}
+    //     })
+    // }
+
+
+    changeImage = (direction) => (event) => {
+
+        let currentImage;
+
+        try {currentImage = document.getElementById("ImageId:" + event.target.value);}
+        catch {return;}
+        
+        let nextImage = currentImage.nextElementSibling;
+        let prevImage = currentImage.previousSibling;
+       
+        // We are at the end of the gallery 
+        if (!nextImage && direction == 1) {return;}
+        if (!prevImage && direction == -1) {return;}
+        if (!prevImage.getAttribute('value') && direction == -1) {return;}
+
+        // Same logic as per the Image component, but using nextImage instead
+
+        // Container for modal
+        let modal = document.getElementById("selected-image-modal");
+
+        // Modal img element
+        let modalImg = document.getElementById("modal-image");
+
+        // Container for image
+        //let imageContainer = document.getElementById("ImageId:" + this.props.imageData.ImageId);
+        let imageContainer = direction == 1 ? nextImage : prevImage;
+        
+        // The selected img element
+        let image = imageContainer.childNodes[0];
+
+        modal.style.display = "block";
+        modalImg.src = image.src;
+        modal.childNodes[1].innerText = image.alt;
+
+        // Update buttons
+
+        // Prev
+        if (direction == 1) {modal.childNodes[2].value = nextImage.getAttribute('value');}
+        if (direction == -1) {modal.childNodes[2].value = prevImage.getAttribute('value');}
+        
+        // Next
+        modal.childNodes[3].value = modal.childNodes[2].value;
+ 
+        modal.classList.toggle("active");
+
+        // Close button
+        var closeButton = modal.childNodes[4];
+
+        // When the user clicks on <span> (x), close the modal
+        closeButton.onclick = function () {
+            modal.style.display = "none";
+        };
+
+        
+    }
+
+    
+
+    render() {
+        return (
+            <div id="selected-image-modal" className="modal">
+                <img className="modal-content" id="modal-image" />
+                <div id="caption"></div>
+                <button className="image-navigation image-left" id="prevImage" value="" onClick={this.changeImage(-1)}>{"<"}</button>
+                <button className="image-navigation image-right" id="nextImage" value="" onClick={this.changeImage(1)}>{">"}</button>
+                <span className="close">&times;</span>
+            </div>
+        );
+    }
+}
+
+export {
+    GalleryPage,
+    ImageModal,
+}

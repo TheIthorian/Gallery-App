@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+	<Query Name="ImageInsert">
+		<SQL>
+INSERT INTO Image (Title, URL, Path, Status, UserId, AddedByUserId)
+	VALUES (%(Title)s, %(URL)s, %(Path)s, %(Status)s, %(UserId)s, %(AddedByUserId)s)
+		</SQL>
+	</Query>	
+	<Query Name="GalleryImageInsert">
+		<SQL>
+INSERT INTO GalleryImage (GalleryId, ImageId, Title, UserId)
+	VALUES (%(GalleryId)s, %(ImageId)s, NULL, %(UserId)s)
+		</SQL>
+	</Query>	
+	<Query Name="DeleteGalleryImagesForRemoveImage">
+		<SQL>	
+DELETE FROM GalleryImage 
+WHERE GalleryId = %(GalleryId)s 
+AND UserId = %(UserId)s
+AND ImageId = %(ImageId)s
+		</SQL>
+	</Query>
+	<Query Name="GalleryInsert">
+		<SQL>
+INSERT INTO Gallery (Title, Status, UserId, AddedDate)
+	VALUES (%(Title)s, 1, %(UserId)s, SysDate())
+		</SQL>
+	</Query>		
+	<Query Name="CustomUpdateGallery">
+		<SQL>
+UPDATE Gallery SET 
+  Title = %(Title)s
+WHERE GalleryId = %(GalleryId)s
+AND UserId = %(UserId)s
+		</SQL>	
+	</Query>
+	<Query Name="DeleteGallery">
+		<SQL>	
+DELETE FROM Gallery 
+WHERE GalleryId = %(GalleryId)s 
+AND UserId = %(UserId)s
+		</SQL>
+	</Query>		
+	<Query Name="DeleteGalleryImages">
+		<SQL>	
+DELETE FROM GalleryImage 
+WHERE GalleryId = %(GalleryId)s
+AND UserId = %(UserId)s
+		</SQL>
+	</Query>	
+	<Query Name="DeleteUnassignedImages">
+		<SQL>	
+DELETE FROM Image I
+WHERE Not Exists (Select 1 
+  FROM GalleryImage GI 
+  WHERE GI.ImageId = I.ImageId 
+  AND I.Userid = GI.UserId)
+		</SQL>
+	</Query>	
+	<Query Name="GetImage">
+		<SQL>
+SELECT 
+  ImageId,
+  Title, 
+  URL,
+  Path
+FROM Image
+WHERE ImageId = %(ImageId)s
+AND Status = 1
+		</SQL>
+	</Query>
+	<Query Name="GetImages">
+		<SQL>
+SELECT 
+  ImageId,
+  Title, 
+  URL,
+  Path
+FROM Image
+WHERE UserId = %(UserId)s
+AND Status = 1
+UNION ALL
+SELECT 
+  ImageId,
+  Title, 
+  URL,
+  Path
+FROM Image
+WHERE UserId is NULL
+AND Status = 1
+		</SQL>
+	</Query>
+		<Query Name="GetGalleryImages">
+		<SQL>
+SELECT
+  I.ImageId,
+  I.Title, 
+  I.URL,
+  I.Path
+FROM Image I
+JOIN GalleryImage GI
+  ON GI.ImageId = I.ImageId
+ AND GI.UserId = I.UserId
+WHERE I.UserId = %(UserId)s
+AND GI.GalleryId = %(GalleryId)s
+		</SQL>
+	</Query>
+	<Query Name="GetAllGallery">
+		<SQL>
+SELECT 
+  G.GalleryId,
+  G.Title,
+ (SELECT Count(Distinct I.ImageId) FROM GalleryImage I WHERE I.GalleryId = G.GalleryId) AS ImageCount
+FROM Gallery G
+  WHERE G.UserId = %(UserId)s
+ORDER BY G.AddedDate 
+		</SQL>
+	</Query>	
+	<Query Name="GetGallery">
+		<SQL>
+SELECT 
+  G.GalleryId,
+  G.Title,
+ (SELECT Count(*) FROM GalleryImage I WHERE I.GalleryId = G.GalleryId) AS ImageCount
+FROM Gallery G
+  WHERE G.UserId = %(UserId)s
+  AND G.GalleryId = %(GalleryId)s
+		</SQL>
+	</Query>		
+</Root>

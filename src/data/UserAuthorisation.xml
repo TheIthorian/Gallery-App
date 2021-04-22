@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+	<Auth Name="UserGalleryId">
+		<SQL>SELECT 
+				1
+			FROM 
+				Gallery
+			WHERE
+				UserId = %(ParentId)s
+			AND 
+				GalleryId = %(ChildId)s
+		</SQL>
+	</Auth>
+	<Auth Name="GalleryIdImageId">
+		<SQL>SELECT 
+				1
+			FROM 
+				GalleryImage
+			WHERE
+				GalleryId = %(ParentId)s
+			AND 
+				ImageId = %(ChildId)s
+		</SQL>
+	</Auth>
+</Root>

@@ -1,0 +1,433 @@
+* {box-sizing: border-box;}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+:root {
+    --font-color: #e8e2d8;
+    --button-color: #ffffff;
+    
+  }
+  
+  /* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
+body {
+    padding:0;
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 2px;
+    background: #fffaee;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.page-container {
+    height: calc(100% - 35px);
+}
+.page-container > button {
+  margin: 25px 0px 10px 30px;
+  padding: 8px 15px 8px 15px;
+  bottom: 5px;
+}
+
+.page-container > h4 {
+  margin: 10px;
+}
+
+span.image-count {
+  float: right;
+}
+
+.footer {
+    width:100%;
+    height: 35px;
+    background-color: rgb(87, 87, 95);
+    position: fixed;
+    z-index: 10;
+    bottom: 0px;
+    display: block;
+}
+.footer > div {
+    color: rgb(170, 168, 168);
+    float: left;
+    top: 10px;
+    position: relative;
+    padding: 0px 10px 0px 10px;
+}
+
+div.footer-space{
+    bottom: 0px;
+    height: 30px;
+    width: 100%;
+}
+
+
+.gallery-container {
+    padding: 0;
+    min-width: 670px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.gallery-title {
+    border: none;
+    margin-bottom: 10px;
+    width: 100%;
+    color: #463514;
+}
+.gallery-toggle {
+  width: calc(100% - 150px);
+  height: auto;
+  margin: 0px 0px 0px 0px;
+  border-radius: None;
+  text-align: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: 0.4s;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  color: #463514;
+  font-size: 30px;
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} 
+.active, .gallery-toggle:hover {
+    background-color: rgb(223, 220, 220);
+}
+button.add-image {
+  height: 40px;
+  width: 50px;
+  font-size: 20px;
+  /* border-left: solid rgb(223, 220, 220) 1px; */
+  border: none;
+  border-left: solid rgb(223, 220, 220) 1px;
+  float: right;
+  transition: background-color 0.4s;
+  cursor: pointer;
+  
+} button.add-image:hover {
+  background-color: rgb(223, 220, 220);
+}
+button.secondary {
+  background-color: transparent;
+  border: solid 2px rgba(138, 25, 110, 0.5);
+  cursor: pointer;
+  outline: none; 
+  color: rgba(138, 25, 110, 0.5);
+
+}
+button.primary {
+  outline: none; 
+  border: solid 2px rgba(138, 25, 110, 0.5);
+  background-color: rgba(138, 25, 110, 0.5);
+  color: #FFFAEE;
+  cursor: pointer;
+  transition: background-color 0.2s;
+} button.primary:hover{
+  background-color: rgba(104, 0, 78, 0.611);
+  
+}
+.picture-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    padding-left: 15px
+} 
+
+.picture-container {
+    border:none;
+    float: left;
+    width: 20%;
+    height: 250px;
+    /* max-height: 0; */
+    display: block;
+    max-height: 100%;
+    min-width: 200px;
+    padding: 0px;
+    position: relative;
+} 
+.picture-container.size1 {width:10%; height:125px; transition: all 0.5s;}
+.picture-container.size2 {width:20%; 
+  /* height:250px;  */
+  transition: max-height 0.5s, height 0.5s;}
+.picture-container.size3 {width:30%; height:375px; transition: all 0.5s;}
+@media (max-width: 1200px) {
+    .picture-container {
+        min-width: 50px;
+        height: 125px;
+    }
+    .picture-container.size2 {
+        min-width: 50px;
+        height: 125px;
+    }
+    .picture-container.size1 {
+        height: 60px;
+    }
+
+ 
+}
+
+.picture-container span.title {
+    color: darkgray;
+    background-color: white;
+    text-align: center;
+    opacity: 0;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px 10px 0px 0px;
+    display: block;
+
+    position: absolute;
+    bottom: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.3s;
+    text-overflow: ellipsis;
+    display: block;
+
+    transition: ease all .5s;
+    font-size: 16px;
+    
+    /* Test */
+    /* opacity: 1; */
+}
+.picture-container span.title span.title-text {
+  width: 10px;
+  margin-left: 35px;
+  margin-right: 35px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.picture-container span.title input {
+  position: absolute;
+  background: none;
+  
+  border: none;
+  /* border: solid 2px rgb(223, 220, 220); */
+  color: rgb(92, 92, 92);
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  bottom: 5px;
+  outline: none;
+  transition: none;
+  height: auto;
+  width: auto;
+  background: white;
+}
+.picture-container span.title input.right {
+  right: 10px;
+}
+.picture-container span.title input.left {
+  left: 10px;
+}
+
+
+
+
+div .picture-container img {    
+    width: 100%;  
+    height:100%;
+    max-height:100%; 
+    max-width:100%;
+    border: none;
+    cursor: pointer;
+    object-fit: cover;
+    transition: box-shadow 5s;
+    transition: border 0.1s;
+    border: solid white 0px;
+    transition: ease all .3s;
+} 
+div .picture-container img.gallery-image:hover  {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: solid white 1.5px;
+}
+div .picture-container img.gallery-image:hover ~ .title {
+    transition: all 0.3s;
+    opacity: 1;
+} 
+.picture-container span.title:hover {
+    transition: all 0.3s;
+    opacity: 1;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  }
+  
+/* Modal Content (Image) */
+.modal-content {
+margin: auto;
+display: block;
+width: auto;
+max-width: 700px;
+max-height: 90%;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+margin: auto;
+display: block;
+width: 80%;
+max-width: 700px;
+text-align: center;
+color: #ccc;
+padding: 10px 0;
+height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+animation-name: zoom;
+animation-duration: 0.35s;
+} @keyframes zoom {
+from {transform:scale(0)}
+to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+position: absolute;
+top: 65px;
+right: 35px;
+color: #f1f1f1;
+font-size: 40px;
+font-weight: bold;
+transition: 0.3s;
+} .close:hover, .close:focus {
+color: #bbb;
+text-decoration: none;
+cursor: pointer;
+}
+
+button.image-navigation {
+  height: 100vh;
+  width: 40vh;
+  top: 0;
+  position: absolute;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  color: transparent;
+  outline: none;
+  font-size: 75px;
+  transition: all 0.5s;
+
+}button.image-navigation:hover {
+  background: rgba(100, 100, 100, 0.042) ;
+  color: rgb(202, 202, 202);
+}
+
+button.image-right {
+  /* right: 75px; */
+  right: 0;
+}
+button.image-left {
+  left: 0;
+}
+
+
+
+div.image-size-toggle {
+    left: 10px;
+    top: 95px;
+    position: absolute;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: absolute;
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    margin-left: 5px;
+    margin-top: 2px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: 16px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 8px;
+    width: 8px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: rgba(138, 25, 110, 0.5);;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px rgba(138, 25, 110, 0.5);;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(14px);
+    -ms-transform: translateX(14px);
+    transform: translateX(14px);
+  }
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+.modal-content {
+    width: 100%;
+}
+}
