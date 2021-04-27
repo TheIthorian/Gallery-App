@@ -1,4 +1,4 @@
-import logo from '../img/logo.png';
+import logo from '../img/bank.svg';
 //https://codesandbox.io/s/vvoqvk78?from-embed=&file=/components/FullRoster.js
 //https://codesandbox.io/s/vvoqvk78?from-embed=&file=/components/Main.js
 import { Link } from 'react-router-dom';
@@ -65,7 +65,7 @@ function Header() {
         <div>
             <header className="page-header">
                 <div className="logo"><img src={logo} alt="logo" /></div>
-                <div className="title-text">IntraSpace</div>
+                <div className="title-text">Picture Bank</div>
                 <SignUp />
                 <div id="header-search">
                     <input id="top-search" type="text" autoCapitalize="none" placeholder="Search.." onKeyUp={pageSearch} />

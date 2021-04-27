@@ -55,9 +55,13 @@ class Image extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            imageData: {}
+            imageData: {},
+            isPopupOpen: false,
+
+            updateTitle: '',
+            updateURL: '',
+            updateMessage: ''
         }
-        
     }
 
 
@@ -111,24 +115,95 @@ class Image extends React.Component {
     }
 
 
-    handleEditImage = (e) => {
-        return;
+    handleEditImage = () => {
+        console.log(this.state.updateTitle, this.state.updateURL) ;
+
+        if(this.state.updateTitle.length == 0) {
+            this.setState({updateMessage : "The title cannot be empty"});
+            return;
+        }
+        if(this.state.updateURL.length == 0) {
+            this.setState({updateMessage : "The URL cannot be empty"});
+            return;
+        }
+
+        let imageId = this.props.imageData.ImageId;
+
+        let requestOptions = {
+            method: 'POST',
+            headers: { 
+                'sessionId': localStorage.getItem('sessionId'),
+                'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify({
+                'Title': this.state.updateTitle,
+                'URL': this.state.updateURL
+            })
+        };
+
+        fetch(settings.hostURL + 'Gallery/' + this.props.imageData.GalleryId + '/Image/' + imageId + '/Update', requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.Result == 'Success') {
+                    let selectedImage = document.getElementById("ImageId:" + imageId);
+                    selectedImage.childNodes[1].childNodes[1].innerText = data.Message.Title;
+                    selectedImage.childNodes[0].src = data.Message.URL;
+                    this.setState({
+                        isPopupOpen: false
+                    });
+
+                } else { console.log("Error updating image"); }
+            })
+            .catch(console.log)
     }
 
+    togglePopup = () => {
+        this.setState({ 
+            isPopupOpen: !this.state.isPopupOpen, 
+            updateTitle: this.props.imageData.Title, 
+            updateURL: this.props.imageData.URL});
+    }
+
+    handleOnChange = (e) => {
+        let Title;
+        let URL;
+
+        if (e.target.name == "URL") {
+            URL = e.target.value
+            this.setState({ updateURL: URL });
+        }
+        if (e.target.name == "Title") {
+            Title = e.target.value
+            console.log(Title);
+            this.setState({ updateTitle: Title });
+        }
+        console.log(this.state.updateTitle, this.state.updateURL);
+    }
 
 
     render() {
         const { imageData } = this.props;
-        //this.setState(this.props);
+        const { isPopupOpen, updateMessage } = this.state;
         return (
             <div value={imageData.ImageId} id={"ImageId:" + imageData.ImageId}  className="picture-container size2" >
                 <img onClick={this.handleClick} className="gallery-image" src={imageData.URL} alt={imageData.Title} />
                 <span className="title">
                     <input type="image" src={removeIcon} value={imageData.ImageId} onClick={this.handleRemoveImage} className="left"/>
                     <span className="title-text">{imageData.Title}</span>
-                    <input type="image" src={editIcon} value={imageData.ImageId} onClick={this.handleEditImage} className="right" />
+                    <input type="image" src={editIcon} value={imageData.ImageId} onClick={this.togglePopup} className="right" />
                 </span>
+                <Popup key="UpdateImage" handleClose={this.togglePopup} isPopupOpen={isPopupOpen} content={
+                    <>
+                        <h3>Edit Image:</h3>
+                        <label for="Title" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="Title" defaultValue={imageData.Title} required/><br />
+                        <label for="URL" >URL: </label><input maxLength="3200" onChange={this.handleOnChange} name="URL" defaultValue={imageData.URL} required/><br />
+                        <button className="primary" type="submit" onClick={this.handleEditImage}>Save</button>
+                        <p className="error-message left popup">{updateMessage}</p>
+                    </>
+                } />
             </div>
+            
         );
     }
 
@@ -422,7 +497,7 @@ class Gallery extends React.Component {
                 <Popup key="RemoveGallery" handleClose={this.toggleRemovePopup} isPopupOpen={isRemovePopupOpen} content={
                     <>
                         <h3>Remove Gallery:</h3>
-                        <p className="left popup" >Are you sure you want to remove Gallery: {oldGalleryTitle}?</p>
+                        <p className="left popup" >Are you sure you want to remove "{oldGalleryTitle}"?</p>
                         <button className="primary" type="submit" onClick={() => { this.handleRemoveGallerySubmit(galleryData.GalleryId) }}>Remove</button>
                         <button className="secondary" type="submit" onClick={() => { this.toggleRemovePopup() }}>Cancel</button>
                         <p className="error-message left popup">{RemoveGalleryMessage}</p>
@@ -533,7 +608,7 @@ class GalleryPage extends React.Component {
             return (
                 <div className="page-container">
                     <ImageSizeCheckbox />
-                    <h4>Number of galleries: {galleryList.length}</h4>
+                    {/* <h4>Number of galleries: {galleryList.length}</h4> */}
                     <button className="primary" onClick={this.toggleAddGalleryPopup}>Add Gallery</button>
                     {galleryList.map((gallery) => (
                         <Gallery galleryData={gallery} />
@@ -561,22 +636,6 @@ class ImageModal extends React.Component {
         this.ImageId = -1;
     }
 
-    // componentDidMount() {
-    //     console.log("Mount");
-    //     document.getElementById("nextImage").addEventListener("keyup", function(e) {
-    //         console.log("button clicked");
-    //         if (e.code == "ArrowRight"){this.changeImage(1);}
-    //     })
-
-    //     console.log(document.getElementById("nextImage"));
-
-    //     document.getElementById("prevImage").addEventListener("keyup", function(e) {
-    //         console.log(e);
-    //         if (e.code == "ArrowLeft"){this.changeImage(-1);}
-    //     })
-    // }
-
-
     changeImage = (direction) => (event) => {
 
         let currentImage;
@@ -586,7 +645,7 @@ class ImageModal extends React.Component {
         
         let nextImage = currentImage.nextElementSibling;
         let prevImage = currentImage.previousSibling;
-       
+
         // We are at the end of the gallery 
         if (!nextImage && direction == 1) {return;}
         if (!prevImage && direction == -1) {return;}

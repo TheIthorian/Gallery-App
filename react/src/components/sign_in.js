@@ -170,7 +170,7 @@ function SignIn() {
         <div className="background">
             <div className="parent-container" >
                 <div className="input-box">
-                    <h1 className="title">Intraspace</h1>
+                    <h1 className="title">Picture Bank</h1>
                     <h2 className="title">Welcome Back!</h2>
                     <form onSubmit={handleSubmitSignIn} className="login-from">
                         <div className="input-group">

@@ -146,8 +146,11 @@ button.primary {
   transition: background-color 0.2s;
 } button.primary:hover{
   background-color: rgba(104, 0, 78, 0.611);
-  
 }
+.page-container button.primary {
+  margin-left: 10px;
+}
+
 .picture-content {
     max-height: 0;
     overflow: hidden;
@@ -363,7 +366,7 @@ button.image-left {
 
 
 div.image-size-toggle {
-    left: 10px;
+    right: 50px;
     top: 95px;
     position: absolute;
 }

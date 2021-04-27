@@ -62,6 +62,47 @@ def addImage (inputs, userProfile):
         None]
 
 
+def updateImage (inputs, userProfile):
+
+    imageId = inputs['ImageId']
+
+    # Data Auths
+    if not server.serverConnection.dataAuthorisation("UserGalleryId", userProfile.userId, inputs['GalleryId']):
+        return [2, None, 'Data Authorisation Error: UserGalleryId']
+
+    if not server.serverConnection.dataAuthorisation("GalleryIdImageId", inputs['GalleryId'], imageId):
+        return [2, None, 'Data Authorisation Error: GalleryIdImageId']
+
+    if len(inputs['URL']) == 0:
+        return [2, 
+        None, 
+        "Empty Image"]
+
+
+    # Update the image data           
+    queryInputs = {
+        'ImageId':imageId, 
+        'Title':inputs['Title'], 
+        'URL':inputs['URL'],
+        'UserId':userProfile.userId
+    }
+    server.serverConnection.runQuery("Image","ImageUpdate", queryInputs)
+
+    image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]
+
+    return [
+        0, 
+        {   
+            'GalleryId' : inputs['GalleryId'],
+            'ImageId': image['ImageId'],
+            'Title': image['Title'], 
+            'URL': image['URL'],
+            'Image': '0'
+        }, 
+        None]
+
+
+
 def getImages (galleryId, userProfile):
 
     if galleryId < 0:

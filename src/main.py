@@ -157,7 +157,7 @@ def before_request_callback():
 
         # Print request data
         if app.debug and request.method != 'OPTIONS':
-            #printRequest(request)
+            printRequest(request)
             app.logger.debug('EndPoint: %s', request.endpoint)
             app.logger.debug('Headers: %s', request.headers)
             app.logger.debug('Body: %s', request.get_data())
@@ -338,6 +338,29 @@ def _addImage(galleryId):
     output = image.addImage(inputs, userProfile)
         
     return formatOutput(output)
+
+
+@app.route('/Gallery/<int:galleryId>/Image/<int:imageId>/Update', methods=["POST"])
+def _updateImage(galleryId, imageId):
+    userProfile = user.UserProfile()    
+    userProfile.constructUserProfile(int(g.userId))
+
+    requestData = request.json
+    print(request)
+    print(requestData['URL'])
+    print("Data: " + str(requestData))
+
+    inputs = {
+        'GalleryId': galleryId,
+        'ImageId': imageId,
+        'Title': requestData['Title'],
+        'URL': requestData['URL']
+    }
+    
+    output = image.updateImage(inputs, userProfile)
+    
+    return formatOutput(output)
+
 
 
 @app.route('/GetImages', methods=["GET"])

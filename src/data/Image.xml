@@ -69,6 +69,28 @@ WHERE ImageId = %(ImageId)s
 AND Status = 1
 		</SQL>
 	</Query>
+	<Query Name="ImageUpdate">
+		<SQL>	
+UPDATE Image 
+SET 
+Title = %(Title)s,
+URL = %(URL)s
+WHERE ImageId = %(ImageId)s 
+AND UserId = %(UserId)s
+		</SQL>
+	</Query>	
+	<Query Name="GetImage">
+		<SQL>
+SELECT 
+  ImageId,
+  Title, 
+  URL,
+  Path
+FROM Image
+WHERE ImageId = %(ImageId)s 
+AND Status = 1
+		</SQL>
+	</Query>	
 	<Query Name="GetImages">
 		<SQL>
 SELECT 

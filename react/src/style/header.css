@@ -24,7 +24,8 @@
     float:left;
     width: 60px;
     height: 60px;
-    transition: transform 4s;
+    transition: transform 3s ease-in;
+    filter: brightness(0) invert(1);
 }.page-header div.logo img:hover{
     transform: rotate(720deg);
 }

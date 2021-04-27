@@ -12,7 +12,7 @@ class Head extends React.Component {
     render(){
         return (
             <head>
-                <title>Gallery</title>
+                <title>Picture Bank</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="stylesheet" href="./style/style.css" />
             </head>
