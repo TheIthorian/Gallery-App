@@ -600,6 +600,30 @@ class GalleryPage extends React.Component {
         }
     }
 
+    toggleAllGalleries = () => {
+        
+        let galleryToggleButtons = document.getElementsByClassName("gallery-toggle");
+        let closeGalleries = false;
+        
+        for (let i = 0; i < galleryToggleButtons.length; i++) {
+            if (galleryToggleButtons[i].classList.contains("active")){
+                closeGalleries = true; 
+            }
+        }
+
+        for (let i = 0; i < galleryToggleButtons.length; i++) {
+            let galleryButton  = galleryToggleButtons[i];
+            if (closeGalleries && galleryButton.classList.contains("active")){
+                galleryButton.click();
+            } 
+
+            if (!closeGalleries && !galleryButton.classList.contains("active")){
+                galleryButton.click();
+            }
+        }
+
+    }
+
     render() {
 
         // If there are any gallaries returned, add the gallery class
@@ -608,7 +632,7 @@ class GalleryPage extends React.Component {
             return (
                 <div className="page-container">
                     <ImageSizeCheckbox />
-                    {/* <h4>Number of galleries: {galleryList.length}</h4> */}
+                    <button className="tirtiary right" onClick={this.toggleAllGalleries}>Toggle All Galleries</button>
                     <button className="primary" onClick={this.toggleAddGalleryPopup}>Add Gallery</button>
                     {galleryList.map((gallery) => (
                         <Gallery galleryData={gallery} />

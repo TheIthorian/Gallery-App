@@ -2,6 +2,9 @@ import server
 
 from config import mysql # remove
 
+
+
+
 def addImage (inputs, userProfile):
 
     # Data Auths
@@ -100,7 +103,6 @@ def updateImage (inputs, userProfile):
             'Image': '0'
         }, 
         None]
-
 
 
 def getImages (galleryId, userProfile):

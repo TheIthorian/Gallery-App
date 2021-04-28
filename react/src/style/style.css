@@ -129,6 +129,13 @@ button.add-image {
 } button.add-image:hover {
   background-color: rgb(223, 220, 220);
 }
+button.tirtiary {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none; 
+  color: rgba(138, 25, 110, 0.5);
+}
 button.secondary {
   background-color: transparent;
   border: solid 2px rgba(138, 25, 110, 0.5);
@@ -149,6 +156,12 @@ button.primary {
 }
 .page-container button.primary {
   margin-left: 10px;
+}
+.page-container button.right {
+  top: 40px;
+  bottom: auto;
+  right: 10px;  
+  position: absolute;
 }
 
 .picture-content {

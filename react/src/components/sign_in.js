@@ -29,15 +29,14 @@ console.log(localStorage.getItem("isLoggedIn"));
 
 function SignIn() {
 
-
-
     let email, password;
     let login = false;
+    let createAccount = false;
   
     function validateForm() {
-        //console.log(email.length, password.length);
-        return true;
-        return email.length > 0 && password.length > 5;
+        
+        if (!email || !password) {return false;}
+        else {return email.length > 0 && password.length > 4;}     
     }
 
     function toggleSignIn(props) {
@@ -47,7 +46,7 @@ function SignIn() {
   
     function handleChangeEmail(e) {
         email = e.target.value;
-        validateForm();
+        //validateForm();
     }
 
     function handleChangePass(e) {
@@ -56,10 +55,17 @@ function SignIn() {
     }
 
     function handleSubmitSignIn(event) {
+        
+        event.preventDefault();
+
         if (!email || !password) {
+            error.wording = "Please provide an email and password";
+            error.display = true;
+            error.type = "warning"
+            updateError();
             return;
         }
-        event.preventDefault();
+        
 
         let potentialSessionId = generateId();
         if (localStorage.getItem('sessionId')) {
@@ -68,7 +74,7 @@ function SignIn() {
 
         let sessionId = potentialSessionId;
 
-        console.log(sessionId);
+        //console.log(sessionId);
 
         let requestOptions = {
             method: 'POST',
@@ -82,7 +88,7 @@ function SignIn() {
             })
         }
 
-        console.log(requestOptions.body);
+        //console.log(requestOptions.body);
 
         fetch("http://127.0.0.1:5000/Login", requestOptions)
         .then(res => res.json())
@@ -91,7 +97,6 @@ function SignIn() {
             if (data.Result == "Success") {
               localStorage.setItem('sessionId', sessionId);
               localStorage.setItem('isLoggedIn', true);
-              alert('Login Successful')
               error.type = "";
               error.display = false;
               error.wording = "";
@@ -101,7 +106,7 @@ function SignIn() {
               error.display = true;
               error.wording = data.Result;
               updateError();
-              alert('Login Failed: ' + error.wording);
+              //alert('Login Failed: ' + error.wording);
           }
         })
         .catch(console.log); 
@@ -110,6 +115,17 @@ function SignIn() {
 
     function handleSubmitSignUp(event) {
         event.preventDefault();
+
+        if (!email || !password) {
+            return;
+        }
+
+        if (password.lenght < 5) {
+            error.wording = "Password must be at least 5 characters long";
+            error.display = true;
+            error.type = "warning"
+            return;
+        }
 
         let potentialSessionId = generateId();
         if (localStorage.getItem('sessionId')) {
@@ -141,10 +157,13 @@ function SignIn() {
             if (data.Result == "Success") {
               localStorage.setItem('sessionId', sessionId);
               localStorage.setItem('isLoggedIn', true);
-              alert('Login Successful')
+              //alert('Login Successful')
               window.location.href = '/';
           } else {
-              alert('Login Failed: ' + data.Result);
+            error.wording = data.Result;
+            error.display = true;
+            error.type = "warning"
+            updateError();
           }
         })
         .catch(console.log)
@@ -166,13 +185,34 @@ function SignIn() {
         Errormessage.innerText = error.wording;
     }
 
+    function toggleSignUp () {
+        console.log(createAccount);
+
+        if (createAccount) {
+            document.getElementById("sign-up-link").style.display = 'block';
+            document.getElementById("create-account-action").style.display = 'none';
+
+            document.getElementById("sign-in-link").style.display = 'none';
+            document.getElementById("sign-in-action").style.display = 'block';
+        }
+        if (!createAccount) {
+            document.getElementById("sign-up-link").style.display = 'none';
+            document.getElementById("create-account-action").style.display = 'block';
+            document.getElementById("sign-in-link").style.display = 'block';
+            document.getElementById("sign-in-action").style.display = 'none';
+        }
+        createAccount = !createAccount;
+        return;
+
+    }
+
     return (
         <div className="background">
             <div className="parent-container" >
                 <div className="input-box">
                     <h1 className="title">Picture Bank</h1>
-                    <h2 className="title">Welcome Back!</h2>
-                    <form onSubmit={handleSubmitSignIn} className="login-from">
+                    <form //onSubmit={handleSubmitSignIn} 
+                    className="login-from" method="POST">
                         <div className="input-group">
                             <label for="email">Email: </label>
                             <input name="email" type="text" className="singup-input" onChange={handleChangeEmail} />
@@ -181,12 +221,16 @@ function SignIn() {
                             <label for="password">Password: </label>
                             <input name="password" type="password" className="singup-input" onChange={handleChangePass} />
                         </div>
-                        <button type="submit" disabled={!validateForm()} className="form-submit">
+                        <button id="sign-in-action" type="submit" className="form-submit" onClick={handleSubmitSignIn}>
                             Sign In
+                        </button>
+                        <button id="create-account-action" type="submit" className="form-submit" onClick={handleSubmitSignUp}>
+                            Create Account
                         </button>
                     </form>
                     <a href={link} id="homelink" hidden="true">Home</a>
-                    <p>Don't have an account? <button className="toggle-signin" onClick={handleSubmitSignUp}>Create one</button></p>
+                    <p id="sign-up-link">Don't have an account? <button className="toggle-signin" onClick={toggleSignUp}>Create one</button></p>
+                    <p id="sign-in-link">Already have an account? <button className="toggle-signin" onClick={toggleSignUp}>Sign in</button></p>
                     <p id="ErrorMessage" hidden="true" className="error-message"></p>
                 </div>
             </div>

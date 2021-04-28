@@ -78,7 +78,7 @@ class Server ():
             print('Parameters: {Auth: ', authName, ', ParentId: ', parentId, ', ChildId: ', childId, '}\n')
             return False
 
-        print(result)
+        #print(result)
         if len(result) > 0: return True 
         else: return False
  

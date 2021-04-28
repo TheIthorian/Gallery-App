@@ -25,6 +25,7 @@ if __name__  == "__main__":
     app.debug = True
     app.config['CORS_HEADERS'] = 'Content-Type'
 
+    
 
 
 # Output[0] = Result Type
@@ -151,12 +152,15 @@ def before_request_callback():
         #return
 
     g.userId = -1
+    
+    printData = False
+    #printData = True
 
     if request.endpoint in app.view_functions and request.method != 'OPTIONS':
         view_func = app.view_functions[request.endpoint]
 
         # Print request data
-        if app.debug and request.method != 'OPTIONS':
+        if app.debug and request.method != 'OPTIONS' and printData:
             printRequest(request)
             app.logger.debug('EndPoint: %s', request.endpoint)
             app.logger.debug('Headers: %s', request.headers)
@@ -227,6 +231,33 @@ def excludeUserAuthentication(function):
 
 
 
+################################################
+# Debug function
+################################################
+@app.route('/Debug/<int:repeats>', methods=["POST"])
+@excludeUserAuthentication
+def debug (repeats):
+    return ({'Message':None})
+
+    userProfile = userProfile = user.UserProfile()    
+    userProfile.constructUserProfile(5)
+
+    n = repeats
+    for i in range(0, n):
+        if i % 20 == 0:
+            print(i)
+        imageData = {
+            'GalleryId': 91,
+            'Title' : 'Test Image: ' + str(i),
+            'Image' : None,
+            'URL' : 'https://s.yimg.com/ny/api/res/1.2/1ziUOraUowhjKxJMC09kaA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTk2MA--/https://s.yimg.com/uu/api/res/1.2/B9piw3Vtqdx71mEmaB7Z5g--~B/aD0xNzMyO3c9MTczMjthcHBpZD15dGFjaHlvbg--/https://media.zenfs.com/en/hearst_prevention_66/78d81e741dc89f64ad6ba3be2d50e7d' + str(i),
+            'PublicImageIndicator' : 5
+        }
+        image.addImage(imageData, userProfile)
+
+    return ({'Message': 'Successfully added ' + str(n) + ' images'})
+
+
 
 
 ################################################
@@ -246,7 +277,11 @@ def _register():
     username = requestSchema['Email'].strip()
     password = requestSchema['Password'].strip()
 
-    output = user.register(email, username, password)
+    sessionId = None if request.headers.get('sessionId') is None else request.headers.get('sessionId')
+
+    # Register the user
+    output = user.register(email, username, password, sessionId)
+
     output = formatOutput(output)
 
     return output
@@ -346,9 +381,6 @@ def _updateImage(galleryId, imageId):
     userProfile.constructUserProfile(int(g.userId))
 
     requestData = request.json
-    print(request)
-    print(requestData['URL'])
-    print("Data: " + str(requestData))
 
     inputs = {
         'GalleryId': galleryId,

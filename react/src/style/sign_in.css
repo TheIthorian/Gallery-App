@@ -14,8 +14,8 @@
 
 .parent-container {
     position: absolute;
-    width: 675px;
-    height: 787px;
+    width: 500px;
+    height: 450px;
     top: 100px;
 }
 
@@ -28,7 +28,7 @@
     bottom: 0%;
     background: linear-gradient(#fffaee 0%, #f2e7cd 100%);
     box-shadow: 20px 20px 5px rgba(0, 0, 0, 0.25);
-    min-width: 700px;
+    min-width: 500px;
 }
 
 h1.title { 
@@ -36,7 +36,7 @@ h1.title {
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
-    font-size: 96px;
+    font-size: 48px;
     line-height: 100%;
     text-align: center;
     /* identical to box height, or 96px */
@@ -102,14 +102,14 @@ button.toggle-signin {
 
 .input-group > label {
     position: absolute;
-    left: 175px;
+    left: 70px;
 }
 
 .input-group > input {
     position: relative;
     width: 370px;
     height: 37px;
-    left: 150px;
+    left: 50px;
     border: 2px solid #46351467;
     top: 30px;
     letter-spacing: 1px;
@@ -127,14 +127,27 @@ form {
     background-color: rgba(138, 25, 110, 0.5);
     color: #FFFAEE;
     padding: 10px;
-    left: 170px;
+    left: 70px;
     margin-top: 50px;
 }
 .form-submit:disabled {
     background-color: rgb(172, 172, 172);
 }
 
-@media only screen and (max-width: 800px) {
+.login-from:disabled {
+    background-color: rgb(172, 172, 172);
+}
+
+
+#sign-in-link {
+    display: none;
+}
+
+#create-account-action {
+    display: none;
+}
+
+@media only screen and (max-width: 500px) {
     .parent-container {
       width: 100vw;
       height: 100vh;

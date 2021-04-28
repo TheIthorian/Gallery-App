@@ -124,7 +124,7 @@ class UserProfile ():
         if not self.isPasswordValid(password):
             return {
                 'verified' : False,
-                'error' : "Invalid Password"
+                'error' : "Invalid credentials"
             }
         
         try:    
@@ -132,7 +132,7 @@ class UserProfile ():
         except Exception as e:
             return {
                 'verified' : False,
-                'error' : "Unexpected error. Please contact..."
+                'error' : "Unexpected error. Please try again."
             }
 
         if len(result) == 0:
@@ -192,7 +192,7 @@ def registerUserSession(sessionId):
     return result
 
         
-def register(email, username, password):
+def register(email, username, password, sessionId):
     
     minPasswordLength = 5
     minUsernameLength = 3
@@ -200,7 +200,7 @@ def register(email, username, password):
     # Password validations
     # Legnth
     if len(password) < minPasswordLength:
-        return [2, None, "Invalid Password"]
+        return [2, None, "Password must be at least 5 characters"]
 
     # Email validations
     # Regex
@@ -238,6 +238,11 @@ def register(email, username, password):
         'Status':1}
 
         userId = server.serverConnection.runInsertQuery("User","UsrInsert", inputs)
+
+        # Register the session
+        userProfile = UserProfile()
+        userProfile.constructUserProfile(userId)
+        userProfile.registerSession(sessionId)
 
         return [
             0, 
