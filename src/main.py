@@ -240,17 +240,81 @@ def debug (repeats):
     return ({'Message':None})
 
     userProfile = userProfile = user.UserProfile()    
-    userProfile.constructUserProfile(5)
+    userProfile.constructUserProfile(16)
 
-    n = repeats
-    for i in range(0, n):
-        if i % 20 == 0:
-            print(i)
+    images = [
+        "https://i.redd.it/otemldrznwi61.jpg",
+        "https://preview.redd.it/7muizx9esti61.jpg?width=960&crop=smart&auto=webp&s=f1639e342a21687d93aee2936b88d01ca0cd55b6",
+        "https://i.redd.it/jt5690hzv2i61.jpg",
+        "https://i.redd.it/p5mu2wn0obh61.jpg",
+        "https://i.redd.it/zvo7sz7ztzg61.jpg",
+        "https://i.redd.it/tmb9i6v5awg61.png",
+        "https://i.redd.it/mk3dh1bu0yg61.jpg",
+        "https://i.redd.it/o5e3cejdevf61.png",
+        "https://i.redd.it/91xpdr3fb0f61.jpg",
+        "https://i.redd.it/xwxjapwvaue61.png",
+        "https://i.redd.it/9z7cmn5812e61.png",
+        "https://i.redd.it/tdxzxuzwhxd61.jpg",
+        "https://i.redd.it/65fxinnzlxc61.jpg",
+        "https://i.redd.it/rjwv4me4rvc61.png",
+        "https://i.redd.it/ndm8oo8gc0c61.jpg",
+        "https://preview.redd.it/ytsvyio67ab61.jpg?width=1000&format=pjpg&auto=webp&s=f5dda07b1263b54112828a25a05016dc265b63ec",
+        "https://i.redd.it/e0ea5qnkgoa61.jpg",
+        "https://i.redd.it/dnzg7smmoiz51.jpg",
+        "https://i.redd.it/4ea9zcm3mwt51.png",
+        "https://i.redd.it/6xoyb7xi0cl51.jpg",
+        "https://i.redd.it/7tqf8j00w5l51.png",
+        "https://i.redd.it/vogfzqwe75j51.png",
+        "https://i.redd.it/7bo50l4ly6f51.png",
+        "https://i.redd.it/fgprg2jcfvd51.png",
+        "https://i.redd.it/5wd0rxc4isb51.jpg",
+        "https://i.redd.it/moptfzsietb51.jpg",
+        "https://i.redd.it/k9jp0r46kh651.jpg",
+        "https://i.redd.it/hsm1vtac1q151.jpg",
+        "https://i.redd.it/38me4fusui151.png",
+        "https://i.redd.it/gn1ak52d36151.png",
+        "https://i.redd.it/z6y1vo6en2151.png",
+        "https://i.redd.it/ztjg5gf10x051.png",
+        "https://i.redd.it/rhofbq6nzkz41.png",
+        "https://i.redd.it/jxx5qjqjoez41.png",
+        "https://i.imgur.com/FgJTPcI.jpg",
+        "https://i.redd.it/pll69z1yr7x41.png",
+        "https://i.redd.it/zvaj5leewpl41.jpg",
+        "https://i.redd.it/hnmx4leaxr541.jpg",
+        "https://i.redd.it/5zyfk1aumce41.png",
+        "https://i.redd.it/lnhxyxfv74q41.png",
+        "https://i.redd.it/jiimpe6djqs41.png",
+        "https://i.redd.it/vok0f83af8s41.png",
+        "https://i.redd.it/7ev7kzrjjtm41.jpg",
+        "https://i.redd.it/imr0lcbpjia41.png",
+        "https://i.redd.it/3b47u8xclg041.png",
+        "https://i.redd.it/8vnxf9p3ohs31.jpg",
+        "https://i.redd.it/7us6kiey09v61.jpg",
+        "https://preview.redd.it/qveizk9zb6u61.jpg?width=1708&format=pjpg&auto=webp&s=682cd9cbaa81bb568cca1fc38ae3cf0d75fa7450",
+        "https://preview.redd.it/e0hzb9ezb6u61.jpg?width=1708&format=pjpg&auto=webp&s=20ba20b4c36eb389f0014d0ae957033f21e53a9c",
+        "https://preview.redd.it/39rvbayyb6u61.jpg?width=1708&format=pjpg&auto=webp&s=2aa34836a717823c8a5cdc6b1befc09c56b845d2",
+        "https://i.redd.it/uy5wj8adebr61.jpg",
+        "https://preview.redd.it/ey7h05mo9rq61.jpg?width=1920&format=pjpg&auto=webp&s=00ff3619b70297db397f90b321297e6e9c4fabee",
+        "https://preview.redd.it/8zdem2swvgq61.jpg?width=1884&format=pjpg&auto=webp&s=60c217e7008e79f10be6f86b91ac9c5b789935ee",
+        "https://i.redd.it/tt3fkav2kdp61.jpg",
+        "https://i.redd.it/s0wocfx315p61.jpg",
+        "https://i.redd.it/iij32c14tlo61.jpg",
+        "https://preview.redd.it/ymuezowzktn61.jpg?width=960&crop=smart&auto=webp&s=8b972c22ae351b47d0ca965d9d60d50a9d0b8e6c",
+        "https://i.redd.it/m6axauqbd9m61.jpg",
+        "https://preview.redd.it/zefds8lpfel61.jpg?width=960&crop=smart&auto=webp&s=a2916aecb34631e5a87a76822377eafd21152b5b",
+        "https://i.redd.it/fmwnxcjtm0k61.jpg"
+    ]
+
+    n = 0
+    for i in images:
+        if n % 20 == 0:
+            print(n)
+        n+=1
         imageData = {
-            'GalleryId': 91,
-            'Title' : 'Test Image: ' + str(i),
+            'GalleryId': 94,
+            'Title' : 'Mincraft ' + str(n),
             'Image' : None,
-            'URL' : 'https://s.yimg.com/ny/api/res/1.2/1ziUOraUowhjKxJMC09kaA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTk2MA--/https://s.yimg.com/uu/api/res/1.2/B9piw3Vtqdx71mEmaB7Z5g--~B/aD0xNzMyO3c9MTczMjthcHBpZD15dGFjaHlvbg--/https://media.zenfs.com/en/hearst_prevention_66/78d81e741dc89f64ad6ba3be2d50e7d' + str(i),
+            'URL' : i,
             'PublicImageIndicator' : 5
         }
         image.addImage(imageData, userProfile)
