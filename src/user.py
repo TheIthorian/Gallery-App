@@ -86,8 +86,6 @@ class UserProfile ():
         try:
             inputs = {'SessionID':sessionId, 'UserId':self.userId, 'UserId2':self.userId}
             server.serverConnection.runQuery("User", "CreateUserSession", inputs)
-            print("register session:")
-            print(inputs)
         except Exception as e:
             print(e)
             return 'Error: ' + str(e)
@@ -98,6 +96,7 @@ class UserProfile ():
             result = server.serverConnection.runQuery("User", "GetUserSession", {'SessionID':sessionId})
 
         except Exception as e:
+            print(e)
             return 'Error: ' + str(e)
 
 

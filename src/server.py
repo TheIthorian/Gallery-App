@@ -5,15 +5,61 @@ import os, time
 import pymysql
 from config import mysql
 
+import app
+
 """
 Todo:
  - Return description of cached values instead of enum
  - Add method to raiseError > UserErrorInsert
 """
 
+class ResponsePayload ():
+    
+    def __init__(self):
+
+        self.definitions = []
+        self.values = []
+        self.messages = []
+
+        self.results = []
+        self.status = 500
+        # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+        """
+        results: {
+            Type: Warning/Info
+            Code: #ErrorId
+            Description: #Desc
+        }
+        """
+
+
+    def formatOutput(self):
+
+        output = {}
+
+        if len(self.definitions) != 0:
+            output['Definitions'] = self.definitions
+        
+        if len(self.values) != 0:
+            output['Values'] = self.values
+
+        if len(self.messages) != 0:
+            output['Messages'] = self.messages
+
+        if len(self.results) != 0:
+            output['Results'] = self.results
+        else:
+            output['Results'] = [{'Type':'Success'}]
+
+        return output
+
+
+
 class Server ():
 
     def __init__(self, root, serverConfigFile):
+        #ET.XMLParser(encoding='utf-8')
         
         root = ET.parse(serverConfigFile).getroot()
         for child in root:
@@ -27,10 +73,36 @@ class Server ():
             if (child.tag == 'AppInfo'):
                 self.siteversion = child.attrib['siteversion']
 
+        # cache queries
+        queries = {}
+
+        for filename in os.listdir('./data'):
+
+            fileLocation = './data/' + filename
+
+            filename = filename[0:-4]
+
+            queryList = {}
+
+            root = ET.parse(fileLocation).getroot()
+            
+            for child in root:
+                queryName = child.attrib['Name']
+                query = child.find('SQL').text
+                
+                queryList[queryName] = query
+            
+            queries[filename] = queryList
+ 
+        self.SQLqueries = queries
+        
+
+
 
     def runQuery(self, file, queryName, inputs):
         conn = mysql.connect()
-        query = GetQuery(file, queryName)
+
+        query = self.SQLqueries[file][queryName]
 
         # Query debugging
         if False:
@@ -50,7 +122,7 @@ class Server ():
 
     def runInsertQuery(self, file, queryName, inputs):
         conn = mysql.connect()
-        query = GetQuery(file, queryName)
+        query = self.SQLqueries[file][queryName]
         cursor = conn.cursor(pymysql.cursors.DictCursor)
 
         if False:
@@ -90,10 +162,8 @@ def GetQuery (file, queryName):
         if child.attrib['Name'] == queryName:
             return child.find('SQL').text
     raise Exception("Unable to locate query: " + file + ">" + queryName)
-    
+
 
 
 global serverConnection
-serverConnection = Server('./', './config/ServerConfig.xml') 
-
-
+serverConnection = Server('./', './config/ServerConfig.xml')

@@ -7,8 +7,18 @@ from config import mysql # remove
 
 def addImage (inputs, userProfile):
 
+    responsePayload = server.ResponsePayload()
+
+
     # Data Auths
     if not server.serverConnection.dataAuthorisation("UserGalleryId", userProfile.userId, inputs['GalleryId']):
+        responsePayload.status = 401
+        responsePayload.results[0] = {
+            'Type': 'Warning',
+            'Code': None,
+            'Description': 'Data Authorisation Error: UserGalleryId'
+        }
+
         return [2, None, 'Data Authorisation Error: UserGalleryId']
 
     if inputs['Image'] is None:

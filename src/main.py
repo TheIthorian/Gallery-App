@@ -21,11 +21,6 @@ import base64
 from datetime import datetime
 
 
-if __name__  == "__main__":
-    app.debug = True
-    app.config['CORS_HEADERS'] = 'Content-Type'
-
-    
 
 
 # Output[0] = Result Type
