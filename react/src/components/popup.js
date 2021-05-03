@@ -24,7 +24,7 @@ class Popup extends React.Component {
             return (
                 <div key={this.props.isPopupOpen} className="popup-box">
                     <div className="box">
-                        <button className="close-icon" onClick={handleClose}>x</button>
+                        <button className="close-icon custom" onClick={handleClose}>x</button>
                         {content}
                     </div>
                 </div>

@@ -14,7 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 CREATE TABLE IF NOT EXISTS Gallery.Users_T (
   UserId INT NOT NULL AUTO_INCREMENT,
   Username VARCHAR(45) NOT NULL,
-  Email VARCHAR(45) NOT NULL,
+  Email VARCHAR(320),
   Password VARCHAR(45) NOT NULL,
   AdminInd INT NOT NULL CONSTRAINT Users_CC01 CHECK (AdminInd IN (5, 6)),
   Status INT NOT NULL CONSTRAINT Users_CC02 CHECK (Status IN (0, 1, 2)),
@@ -56,6 +56,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table Gallery.GalleryImage_T
 -- -----------------------------------------------------
+/*
 CREATE TABLE IF NOT EXISTS Gallery.GalleryImage_T (
   GalleryImageId INT NOT NULL AUTO_INCREMENT,
   GalleryId INT NOT NULL,
@@ -65,7 +66,7 @@ CREATE TABLE IF NOT EXISTS Gallery.GalleryImage_T (
   TmStamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (GalleryImageId))
 ENGINE = InnoDB;
-
+*/
 USE Gallery ;
 
 
@@ -106,6 +107,7 @@ Title,
 URL,
 Path,
 Status,
+GalleryId,
 UserId,
 AddedByUserId,
 TmStamp
@@ -114,6 +116,7 @@ FROM Image_T;
 -- -----------------------------------------------------
 -- View Gallery.GalleryImage
 -- -----------------------------------------------------
+/*
 CREATE OR REPLACE VIEW GalleryImage AS
 SELECT
   GalleryImageId,
@@ -123,7 +126,7 @@ SELECT
   UserId,
   TmStamp
 FROM GalleryImage_T;
-
+*/
 
 
 GRANT SELECT ON TABLE Gallery.* TO 'RO';

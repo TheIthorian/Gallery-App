@@ -46,20 +46,12 @@ def addImage (inputs, userProfile):
         'URL':inputs['URL'], 
         'Path':'xx',  
         'Status':1, 
+        'GalleryId':inputs['GalleryId'],
         'UserId':userProfile.userId,
         'AddedByUserId':userProfile.userId
     }
+    print(queryInputs)
     imageId = server.serverConnection.runInsertQuery("Image","ImageInsert", queryInputs)
-
-    # Link the image to the gallery
-    queryInputs = {
-        'GalleryId' : inputs['GalleryId'],
-        'ImageId' : imageId,
-        'UserId' : userProfile.userId
-    }
-
-    galleryImageId = server.serverConnection.runInsertQuery("Image", "GalleryImageInsert", queryInputs)
-
 
     image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]
 
@@ -158,8 +150,7 @@ def removeImage (inputs, userProfile):
             'ImageId':imageId
         }
 
-    server.serverConnection.runQuery("Image", "DeleteGalleryImagesForRemoveImage", queryInputs)
-    server.serverConnection.runQuery("Image", "DeleteUnassignedImages", {})
+    server.serverConnection.runQuery("Image", "DeleteImage", queryInputs)
 
     output = getImages(galleryId, userProfile)[1]
 
@@ -264,9 +255,8 @@ def removeGallery (inputs, userProfile):
                 'GalleryId':galleryId
             }
 
-        server.serverConnection.runQuery("Image", "DeleteGallery", inputs)
         server.serverConnection.runQuery("Image", "DeleteGalleryImages", inputs)
-        server.serverConnection.runQuery("Image", "DeleteUnassignedImages", {})
+        server.serverConnection.runQuery("Image", "DeleteGallery", inputs)
 
         output = getGallery({'GalleryId':-1}, userProfile)[1]
         print(output)

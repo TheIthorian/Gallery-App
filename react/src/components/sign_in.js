@@ -29,24 +29,22 @@ console.log(localStorage.getItem("isLoggedIn"));
 
 function SignIn() {
 
-    let email, password;
+    let email, password, username;
     let login = false;
     let createAccount = false;
   
     function validateForm() {
         
-        if (!email || !password) {return false;}
-        else {return email.length > 0 && password.length > 4;}     
-    }
-
-    function toggleSignIn(props) {
-        props.login = !props.login;
-        console.log(login);
+        if (!username || !password) {return false;}
+        else {return username.length > 0 && password.length > 4;}     
     }
   
     function handleChangeEmail(e) {
-        email = e.target.value;
-        //validateForm();
+        email = e.target.value.toLowerCase();
+    }
+
+    function handleChangeUsername(e) {
+        username = e.target.value;
     }
 
     function handleChangePass(e) {
@@ -58,8 +56,8 @@ function SignIn() {
         
         event.preventDefault();
 
-        if (!email || !password) {
-            error.wording = "Please provide an email and password";
+        if (!username || !password) {
+            error.wording = "Please provide a username and password";
             error.display = true;
             error.type = "warning"
             updateError();
@@ -83,8 +81,8 @@ function SignIn() {
                 'sessionId': sessionId,
                 },
             body: JSON.stringify({
-                Email: email,
-                Password: password
+                Username: username,
+                Password: password                
             })
         }
 
@@ -116,9 +114,11 @@ function SignIn() {
     function handleSubmitSignUp(event) {
         event.preventDefault();
 
-        if (!email || !password) {
+        if (!username || !password) {
             return;
         }
+
+        if (!email) {email = "";}
 
         if (password.lenght < 5) {
             error.wording = "Password must be at least 5 characters long";
@@ -143,6 +143,7 @@ function SignIn() {
                 'sessionId': sessionId,
                 },
             body: JSON.stringify({
+                Username: username,
                 Email: email,
                 Password: password
             })
@@ -189,17 +190,23 @@ function SignIn() {
         console.log(createAccount);
 
         if (createAccount) {
-            document.getElementById("sign-up-link").style.display = 'block';
-            document.getElementById("create-account-action").style.display = 'none';
+            // From create account > sign up 
+            document.getElementById("sign-up-link").classList.remove("hidden");
+            document.getElementById("create-account-action").classList.add("hidden");
 
-            document.getElementById("sign-in-link").style.display = 'none';
-            document.getElementById("sign-in-action").style.display = 'block';
+            document.getElementById("sign-in-link").classList.add("hidden");
+            document.getElementById("sign-in-action").classList.remove("hidden");
+
+            document.getElementById("email-input-group").classList.add("hidden");
         }
         if (!createAccount) {
-            document.getElementById("sign-up-link").style.display = 'none';
-            document.getElementById("create-account-action").style.display = 'block';
-            document.getElementById("sign-in-link").style.display = 'block';
-            document.getElementById("sign-in-action").style.display = 'none';
+            // From sign up > create account
+            document.getElementById("sign-up-link").classList.add("hidden");
+            document.getElementById("create-account-action").classList.remove("hidden");
+            document.getElementById("sign-in-link").classList.remove("hidden");
+            document.getElementById("sign-in-action").classList.add("hidden");
+
+            document.getElementById("email-input-group").classList.remove("hidden");
         }
         createAccount = !createAccount;
         return;
@@ -212,26 +219,30 @@ function SignIn() {
                 <div className="input-box">
                     <h1 className="title">Picture Bank</h1>
                     <form //onSubmit={handleSubmitSignIn} 
-                    className="login-from" method="POST">
+                        className="login-form" method="POST">
                         <div className="input-group">
-                            <label for="email">Email: </label>
-                            <input name="email" type="text" className="singup-input" onChange={handleChangeEmail} />
+                            <label for="username">Username: </label>
+                            <input name="username" type="text" className="" onChange={handleChangeUsername} />
+                        </div>
+                        <div className="input-group hidden" id="email-input-group">
+                            <label for="email">Email (Optional): </label>
+                            <input name="email" type="text" className="" onChange={handleChangeEmail} />
                         </div>
                         <div className="input-group">
                             <label for="password">Password: </label>
-                            <input name="password" type="password" className="singup-input" onChange={handleChangePass} />
+                            <input name="password" type="password" className="" onChange={handleChangePass} />
                         </div>
-                        <button id="sign-in-action" type="submit" className="form-submit" onClick={handleSubmitSignIn}>
+                        <button id="sign-in-action" type="submit" className="primary" onClick={handleSubmitSignIn}>
                             Sign In
                         </button>
-                        <button id="create-account-action" type="submit" className="form-submit" onClick={handleSubmitSignUp}>
+                        <button id="create-account-action" type="submit" className="primary hidden" onClick={handleSubmitSignUp}>
                             Create Account
                         </button>
                     </form>
                     <a href={link} id="homelink" hidden="true">Home</a>
-                    <p id="sign-up-link">Don't have an account? <button className="toggle-signin" onClick={toggleSignUp}>Create one</button></p>
-                    <p id="sign-in-link">Already have an account? <button className="toggle-signin" onClick={toggleSignUp}>Sign in</button></p>
                     <p id="ErrorMessage" hidden="true" className="error-message"></p>
+                    <p id="sign-up-link">Don't have an account? <button className="tirtiary" onClick={toggleSignUp}>Create one</button></p>
+                    <p className="hidden" id="sign-in-link">Already have an account? <button className="tirtiary" onClick={toggleSignUp}>Sign in</button></p>                    
                 </div>
             </div>
         </div>

@@ -31,7 +31,7 @@ SELECT
 	AdminInd
 FROM Users
 WHERE Status = 1
-AND Email = %(Email)s
+AND Username = %(Username)s
 		</SQL>
 	</Query>
 	<Query Name="CreateUserSession" Outputs="0" Inputs="1">

@@ -1,0 +1,112 @@
+
+div.button-container {
+    display: flex;
+    flex-direction: column;
+}
+
+div.button-container > div.button-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: center;
+}
+
+div.button-container > div.button-group > button {
+    width: 100%;
+}
+
+button:not(.custom) {
+    cursor: pointer;
+    margin: 5px;
+    padding: 10px;
+
+    border: 0;
+    border-radius: 2px;
+
+    min-width: 50px;;
+    
+    text-align: left;
+    box-shadow: 2px 2px 2px 0px rgba(33, 33, 33, 0.77);
+
+    transition: filter 200ms ease;
+
+    letter-spacing: 0.1em;
+
+}
+button.hidden {
+    display: none;
+}
+button.thin {
+    padding: 5px 10px 5px 10px;
+}
+button:hover {
+    filter: brightness(115%);
+}
+button:focus {
+    filter: none;
+    /*outline: solid 1px var(--text-light);*/
+	box-shadow: none;
+}
+button[disabled] {
+    filter: brightness(70%);
+    cursor: auto;
+}
+
+/* Primary */
+button.primary {
+    --background-color: var(--highlight-dark);
+    background-color: var(--background-color);
+    border: none;    
+    color: var(--text-light);
+}
+button.primary.light {
+    --background-color: var(--highlight-light);
+    background-color: var(--background-color);  
+    color: var(--text-light);
+}
+
+/* Secondary */
+button.secondary {
+    --text-color: var(--highlight-dark);
+
+    color: var(--text-dark);
+    border: solid 2px var(--text-color);
+
+    background-color: transparent;    
+}
+button.secondary.light {
+    --text-color: var(--text-light);
+    color: var(--text-color);
+    border: solid 2px var(--text-color);
+}
+
+/* Tirtiary */
+button.tirtiary {
+    --text-color: var(--highlight);
+    color: var(--text-color);
+
+    padding: 5px;
+
+    text-decoration: underline; 
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+button.positive {
+    --text-color: var(--positive);
+    --background-color: var(--positive);
+}
+
+button.danger {
+    --text-color: var(--danger);
+    --background-color: var(--danger);
+}
+
+button.plus::after {
+    content: " +"    
+}
+
+button.minus::after {
+    content: " -"    
+}

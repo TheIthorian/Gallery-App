@@ -127,7 +127,7 @@ class UserProfile ():
             }
         
         try:    
-            result = server.serverConnection.runQuery("User", "ValidatePasswordForUser", {'Email':username})
+            result = server.serverConnection.runQuery("User", "ValidatePasswordForUser", {'Username':username})
         except Exception as e:
             return {
                 'verified' : False,
@@ -203,13 +203,15 @@ def register(email, username, password, sessionId):
 
     # Email validations
     # Regex
-    if not re.search("[^@]+@[^@]+\.[^@]+", email):
+    if not re.search("[^@]+@[^@]+\.[^@]+", email) and len(email) > 0:
+        print(email)
         return [2, None, "Invalid Email"]
 
     # Exists
-    result = server.serverConnection.runQuery("User", "EmailExists", {'Email':email})
-    if len(result) > 0:
-        return [2, None, "Email already exists"]
+    if len(email) > 0:
+        result = server.serverConnection.runQuery("User", "EmailExists", {'Email':email})
+        if len(result) > 0:
+            return [2, None, "Email already exists"]
 
 
     # Username validations
@@ -230,7 +232,7 @@ def register(email, username, password, sessionId):
         passwordHash = hash.hexdigest()
         
         inputs = {'Username':username, 
-        'Email':email, 
+        'Email':email if len(email) > 0 else None, 
         'Password':passwordHash, 
         'PasswordSalt':passwordSalt,
         'AdminInd':5,

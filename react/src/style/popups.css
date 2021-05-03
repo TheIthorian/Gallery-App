@@ -10,9 +10,14 @@
 }
  
 .box {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+
   position: relative;
   width: 70%;
   max-width: 600px;
+  min-height: 300px;
   margin: 0 auto;
   height: auto;
   max-height: 70vh;
@@ -32,24 +37,19 @@ p.left {
   text-align: left;
 }
 
-p.popup {
-  margin-left: 30px;
-}
-
 .box > h3 {
-  padding: 10px 0px 0px 30px;
+  padding: 0;
   margin: none;
 }
 
 .box > label {
-  padding: 10px 0px 0px 30px;
+  padding-top: 10px;
   float: left;
   width: 100%;
 }
 
 .box > input {
-  right: 50%;
-  margin: 10px 0px 0px 30px;
+  margin: 10px 0px 0px 0px;
   padding: 3px;
   letter-spacing: 0.05em;
   font-family: Roboto;
@@ -57,9 +57,8 @@ p.popup {
 }
 
 .box > button[type="submit"] {
-  margin: 10px 0px 10px 30px;
-  padding: 8px 15px 8px 15px;
-  bottom: 5px;
+  margin: 10px 0 0 0;
+  width: 100px;
   /* border: none;
   background-color: rgba(138, 25, 110, 0.5);
   color: #FFFAEE; */

@@ -40,7 +40,7 @@ class ImageSizeCheckbox extends React.Component {
     render() {
         return (
             <div className="image-size-toggle">
-                Small Images:
+                <div>Small Images:</div>
                 <label className="switch">
                     <input type="checkbox" className="image-scale-checkbox" id="image-scale" onClick={this.handleClick} />
                     <span class="slider"></span>
@@ -235,7 +235,7 @@ class Gallery extends React.Component {
             galleryTitle: this.props.galleryData.Title,
             oldGalleryTitle: this.props.galleryData.Title,
         }
-        this.isGalleryOpen = true;
+        this.isGalleryOpen = false;
         this.galleryId = props.galleryData.GalleryId;
     }
 
@@ -426,25 +426,25 @@ class Gallery extends React.Component {
 
         let galleryButton = e.target;
 
-        let areGalleryImagesSmall = document.getElementById("image-scale").checked;
+        let areGalleryImagesSmall = document.getElementById("image-scale").checked;        
 
         while (content && content.tagName != "button") {
+            content.childNodes[1].style.display = !areGalleryImagesSmall ? 'block' : 'none';
 
             if (this.isGalleryOpen) {
                 galleryButton.classList.remove("active");
 
-                content.style.display = 'none';
+                content.style.display = null;
                 content.style.maxHeight = '0%';
 
                 content.childNodes[1].style.display = 'none';
             } else {
                 galleryButton.classList.add("active");
                 content.style.display = 'block';
-                content.style.maxHeight = '100%';
+                content.style.maxHeight = null;
 
                 //content.childNodes[1].style.maxHeight = '100%';
-                
-                content.childNodes[1].style.display = !areGalleryImagesSmall ? 'block' : 'none';
+                                
             }
             content = content.nextElementSibling;
         }
@@ -458,16 +458,17 @@ class Gallery extends React.Component {
             UpdateGalleryMessage, galleryTitle, oldGalleryTitle, isRemovePopupOpen, RemoveGalleryMessage } = this.state;
 
         return (
-            <div>
+            <>
                 <div id={"GalleryId:" + galleryData.GalleryId} className="gallery-container">
                     <div className="gallery-toggle-container">
-                        <button className="gallery-toggle" onClick={this.toggleGallery} >
-                            {oldGalleryTitle} <span class="image-count">[{imageList.length}]</span>
+                        <button className="gallery-toggle custom" onClick={this.toggleGallery} >
+                            {oldGalleryTitle}
                         {/* , ID:{galleryData.GalleryId}, Image Count:({galleryData.ImageCount}) */}
                         </button>
-                        <button className="add-image" onClick={this.toggleRemovePopup} ><img src={removeIcon}/></button>
-                        <button className="add-image" onClick={this.togglePopup} ><img src={addIcon}/></button>
-                        <button className="add-image" onClick={this.toggleUpdatePopup} >
+                        <button class="image-count custom">[{imageList.length}]</button>
+                        <button className="action custom" onClick={this.toggleRemovePopup} ><img src={removeIcon}/></button>
+                        <button className="action custom" onClick={this.togglePopup} ><img src={addIcon}/></button>
+                        <button className="action custom" onClick={this.toggleUpdatePopup} >
                             <img src={editIcon}/>
                         </button>
                     </div>
@@ -503,7 +504,7 @@ class Gallery extends React.Component {
                         <p className="error-message left popup">{RemoveGalleryMessage}</p>
                     </>
                 } />
-            </div>
+            </>
         );
     }
 }
@@ -630,22 +631,24 @@ class GalleryPage extends React.Component {
         const { galleryList, isAddPopupOpen, AddGalleryMessage } = this.state;
         if (galleryList) {
             return (
-                <div className="page-container">
-                    <ImageSizeCheckbox />
-                    <button className="tirtiary right" onClick={this.toggleAllGalleries}>Toggle All Galleries</button>
-                    <button className="primary" onClick={this.toggleAddGalleryPopup}>Add Gallery</button>
+                <>
+                    <div className="tools-container">
+                        <ImageSizeCheckbox />
+                        <button id="toggle-all-gallery" className="tirtiary right" onClick={this.toggleAllGalleries}>Toggle All Galleries</button>
+                        <button id="add-gallery" className="primary" onClick={this.toggleAddGalleryPopup}>Add Gallery</button>
+                    </div>
                     {galleryList.map((gallery) => (
                         <Gallery galleryData={gallery} />
                     ))}
                     <Popup handleClose={this.toggleAddGalleryPopup} isPopupOpen={isAddPopupOpen} content={
                         <>
                             <h3>Add Gallery:</h3>
-                            <label for="AddGalleryTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="AddGalleryTitle" /><br />
+                            <label for="AddGalleryTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="AddGalleryTitle" />
                             <button className="primary" type="submit" onClick={() => { this.handleAddGallerySubmit() }}>Save</button>
                             <p className="error-message left popup">{AddGalleryMessage}</p>
                         </>
                     } />
-                </div>
+                </>
             );
         } else {
             return (<><ImageSizeCheckbox /></>);
@@ -723,8 +726,8 @@ class ImageModal extends React.Component {
             <div id="selected-image-modal" className="modal">
                 <img className="modal-content" id="modal-image" />
                 <div id="caption"></div>
-                <button className="image-navigation image-left" id="prevImage" value="" onClick={this.changeImage(-1)}>{"<"}</button>
-                <button className="image-navigation image-right" id="nextImage" value="" onClick={this.changeImage(1)}>{">"}</button>
+                <button className="image-navigation image-left custom" id="prevImage" value="" onClick={this.changeImage(-1)}>{"<"}</button>
+                <button className="image-navigation image-right custom" id="nextImage" value="" onClick={this.changeImage(1)}>{">"}</button>
                 <span className="close">&times;</span>
             </div>
         );

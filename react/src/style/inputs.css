@@ -1,0 +1,35 @@
+
+.input-group {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr; 
+    grid-template-areas:
+        "label label"
+        "input button";
+
+    width: 100%;
+    margin: 15px 0px 15px 0px;
+}
+.input-group.hidden {
+    display: none;
+}
+
+.input-group > label {
+    padding-bottom: 5px;
+}
+
+.input-group > input {
+    position: relative;
+    width: auto;
+    outline: none;
+    letter-spacing: 0.08em;
+    grid-area: input;
+    border: solid 2px var(--outline-dark);
+}
+
+.input-group > button {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    grid-area: button;
+}

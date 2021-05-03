@@ -15,7 +15,7 @@
 		<SQL>SELECT 
 				1
 			FROM 
-				GalleryImage
+				Image
 			WHERE
 				GalleryId = %(ParentId)s
 			AND 

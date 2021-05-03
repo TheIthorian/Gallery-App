@@ -43,17 +43,17 @@ class SignUp extends React.Component {
     render() {
         if (!this.isLoggedIn()) {
             return (
-                <div>
-                    <Link id="sign-up" to="./sign-in" style={{ float: "right" }}>Sign Up</Link>
-                    <Link to='/sign-in' id="sign-in" style={{ float: "right" }}>Sign In</Link>
-                </div>
+                <>
+                    <Link id="sign-up" to="./sign-in" className="primary">Sign Up</Link>
+                    <Link to='/sign-in' id="sign-in" className="secondary">Sign In</Link>
+                </>
 
             );
         } else {
             return (
-                <div>
-                    <button id="logout" onClick={this.Logout} style={{ float: "right" }}>Log out</button>
-                </div>
+                <>
+                    <button id="logout" className="secondary light" onClick={this.Logout} style={{ float: "right" }}>Log out</button>
+                </>
             );
         }
     }
@@ -62,7 +62,7 @@ class SignUp extends React.Component {
 function Header() {
 
     return (
-        <div>
+        <>
             <header className="page-header">
                 <div className="logo"><img src={logo} alt="logo" /></div>
                 <div className="title-text">Picture Bank</div>
@@ -71,8 +71,7 @@ function Header() {
                     <input id="top-search" type="text" autoCapitalize="none" placeholder="Search.." onKeyUp={pageSearch} />
                 </div>
             </header>
-            <div className="header-space"></div>
-        </div>
+        </>
     );
 }
 

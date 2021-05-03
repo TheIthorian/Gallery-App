@@ -25,7 +25,7 @@ class Home extends React.Component {
     render(){
         localStorage.setItem("isPopupOpen", false);
         return (
-            <div>
+            <div className="page-container">
                 <Header />
                 <GalleryPage />
                 <ImageModal />

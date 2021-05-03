@@ -8,6 +8,7 @@ import { Route, Switch } from 'react-router-dom';
 import './style/header.css';
 import './style/style.css';
 import './style/popups.css';
+import './style/inputs.css';
 
 function App() {
 

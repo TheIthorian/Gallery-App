@@ -1,167 +1,128 @@
 * {box-sizing: border-box;}
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-:root {
-    --font-color: #e8e2d8;
-    --button-color: #ffffff;
-    
-  }
-  
-  /* width */
-::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888; 
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-  }
 
 body {
-    padding:0;
-    margin:0;
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: 2px;
-    background: #fffaee;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
+  padding:0;
+  margin:0;
+  /* font-family: Arial, Helvetica, sans-serif; */
+  letter-spacing: 2px;
+  background: #fffaee;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
 }
 
 .page-container {
-    height: calc(100% - 35px);
-}
-.page-container > button {
-  margin: 25px 0px 10px 30px;
-  padding: 8px 15px 8px 15px;
-  bottom: 5px;
-}
-
-.page-container > h4 {
-  margin: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 60px auto 1fr;
+  grid-template-areas: 
+    "header"
+    "tools"
+    "galleries";
 }
 
-span.image-count {
-  float: right;
+
+.tools-container {
+  grid-area: tools;
+  display: grid;
+  grid-template-areas:    
+    "add-gallery non none"
+    "small-images non toggle-all"
+    ;
+
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto;
+  padding: 20px;
+}
+.tools-container > * {
+  margin-top: 10px;
 }
 
-.footer {
-    width:100%;
-    height: 35px;
-    background-color: rgb(87, 87, 95);
-    position: fixed;
-    z-index: 10;
-    bottom: 0px;
-    display: block;
-}
-.footer > div {
-    color: rgb(170, 168, 168);
-    float: left;
-    top: 10px;
-    position: relative;
-    padding: 0px 10px 0px 10px;
+.tools-container > #toggle-all-gallery {
+  grid-area: toggle-all;
+  margin: 10px 0px 10px 0px;
+  padding: 0;
 }
 
-div.footer-space{
-    bottom: 0px;
-    height: 30px;
+.tools-container > #add-gallery {
+  grid-area: add-gallery;
+  width: 125px;
+  text-align: center;
+}
+
+/* Toggle Gallery */
+.gallery-toggle-container {
+  display: grid;
+  grid-template-areas: "gallery-title image-count edit add remove";
+  grid-template-columns: 1fr auto 50px 50px 50px;
+  align-items: center;
+  height: auto;  
+  font-family: roboto;
+}
+  .gallery-toggle-container > button {
+    font-size: 28px;
+    margin: 0;
+    height: 100%;
     width: 100%;
-}
+    outline: none;
+    border: none;
+    border-radius: None;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .gallery-toggle {
+    grid-area: gallery-title;
+
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+
+    margin: 0;
+    padding: 0;
+    padding-left: 10px;
+
+    transition: 0.4s;
+    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    white-space: nowrap;
+    text-align: left;
+  } 
+  .gallery-container > .image-count {
+    grid-area: image-count;  
+  }
+  .active, .gallery-toggle:hover {
+    background-color: rgb(223, 220, 220);
+  }
+  .gallery-toggle-container > button.action {
+    height: 40px;
+    width: 50px;
+    font-size: 20px;
+    /* border-left: solid rgb(223, 220, 220) 1px; */
+    border: none;
+    border-left: solid rgb(223, 220, 220) 1px;
+    float: right;
+    transition: background-color 0.4s;
+    cursor: pointer;
+    
+  } button.action:hover {
+    background-color: rgb(223, 220, 220);
+  }
 
 
+
+
+/* Gallery */
 .gallery-container {
     padding: 0;
     min-width: 670px;
     height: auto;
     margin-bottom: 10px;
-}
-
-.gallery-title {
-    border: none;
-    margin-bottom: 10px;
-    width: 100%;
-    color: #463514;
-}
-.gallery-toggle {
-  width: calc(100% - 150px);
-  height: auto;
-  margin: 0px 0px 0px 0px;
-  border-radius: None;
-  text-align: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  transition: 0.4s;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  color: #463514;
-  font-size: 30px;
-  height: 40px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-} 
-.active, .gallery-toggle:hover {
-    background-color: rgb(223, 220, 220);
-}
-button.add-image {
-  height: 40px;
-  width: 50px;
-  font-size: 20px;
-  /* border-left: solid rgb(223, 220, 220) 1px; */
-  border: none;
-  border-left: solid rgb(223, 220, 220) 1px;
-  float: right;
-  transition: background-color 0.4s;
-  cursor: pointer;
-  
-} button.add-image:hover {
-  background-color: rgb(223, 220, 220);
-}
-button.tirtiary {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  outline: none; 
-  color: rgba(138, 25, 110, 0.5);
-}
-button.secondary {
-  background-color: transparent;
-  border: solid 2px rgba(138, 25, 110, 0.5);
-  cursor: pointer;
-  outline: none; 
-  color: rgba(138, 25, 110, 0.5);
-
-}
-button.primary {
-  outline: none; 
-  border: solid 2px rgba(138, 25, 110, 0.5);
-  background-color: rgba(138, 25, 110, 0.5);
-  color: #FFFAEE;
-  cursor: pointer;
-  transition: background-color 0.2s;
-} button.primary:hover{
-  background-color: rgba(104, 0, 78, 0.611);
-}
-.page-container button.primary {
-  margin-left: 10px;
-}
-.page-container button.right {
-  top: 40px;
-  bottom: auto;
-  right: 10px;  
-  position: absolute;
 }
 
 .picture-content {
@@ -176,8 +137,8 @@ button.primary {
     float: left;
     width: 20%;
     height: 250px;
-    /* max-height: 0; */
-    display: block;
+
+    display: none;
     max-height: 100%;
     min-width: 200px;
     padding: 0px;
@@ -200,9 +161,8 @@ button.primary {
     .picture-container.size1 {
         height: 60px;
     }
-
- 
 }
+
 
 .picture-container span.title {
     color: darkgray;
@@ -224,9 +184,6 @@ button.primary {
 
     transition: ease all .5s;
     font-size: 16px;
-    
-    /* Test */
-    /* opacity: 1; */
 }
 .picture-container span.title span.title-text {
   width: 10px;
@@ -337,17 +294,17 @@ to {transform:scale(1)}
 
 /* The Close Button */
 .close {
-position: absolute;
-top: 65px;
-right: 35px;
-color: #f1f1f1;
-font-size: 40px;
-font-weight: bold;
-transition: 0.3s;
-} .close:hover, .close:focus {
-color: #bbb;
-text-decoration: none;
-cursor: pointer;
+  position: absolute;
+  top: 65px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+  } .close:hover, .close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 button.image-navigation {
@@ -362,6 +319,8 @@ button.image-navigation {
   outline: none;
   font-size: 75px;
   transition: all 0.5s;
+  box-shadow: none;
+  max-width: 30vw;
 
 }button.image-navigation:hover {
   background: rgba(100, 100, 100, 0.042) ;
@@ -381,12 +340,16 @@ button.image-left {
 div.image-size-toggle {
     right: 50px;
     top: 95px;
-    position: absolute;
+    grid-area: small-images;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 /* The switch - the box around the slider */
 .switch {
-    position: absolute;
+    position: relative;
     display: inline-block;
     width: 30px;
     height: 20px;
