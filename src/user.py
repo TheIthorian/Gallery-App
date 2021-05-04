@@ -194,7 +194,7 @@ def registerUserSession(sessionId):
 def register(email, username, password, sessionId):
     
     minPasswordLength = 5
-    minUsernameLength = 3
+    minUsernameLength = 1
 
     # Password validations
     # Legnth

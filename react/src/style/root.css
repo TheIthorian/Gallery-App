@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 :root {
     /* https://coolors.co/ffffff-a13f85-682182-29202b-6096ba */
-    --background-light: #ffffff;
+    /* Old Style: */
+    /* --background-light: #ffffff;
     --text-light: #ECE5F0;
     --ouline-light: #6096BA;
     --highlight-light: #6096BA;
@@ -9,9 +10,21 @@
     --background-dark: #ECE5F0;
     --text-dark: #29202B;
     --outline-dark: #5e3282;
-    --highlight-dark: #A13F85;
+    --highlight-dark: #A13F85; */
+
+    --background-light: #FAFAFA;
+    --text-light: #FAFAFA;
+    --ouline-light: #EA5A5A;
+    --highlight-light: #EA5A5A;
+
+    --background-dark: #2C2937;
+    --text-dark: #29202B;
+    --outline-dark: #EA5A5A;
+    --highlight-dark: #EA5A5A;
 
     --danger: rgb(158, 60, 60);
+    --danger: #EA5A5A;
+
     --positive: rgb(57, 146, 57);
 
     font-family: Roboto !important;

@@ -64,7 +64,7 @@ function Header() {
     return (
         <>
             <header className="page-header">
-                <div className="logo"><img src={logo} alt="logo" /></div>
+                {/* <div className="logo"><img src={logo} alt="logo" /></div> */}
                 <div className="title-text">Picture Bank</div>
                 <SignUp />
                 <div id="header-search">

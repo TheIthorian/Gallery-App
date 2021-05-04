@@ -17,13 +17,13 @@ div.button-container > div.button-group > button {
 
 button:not(.custom) {
     cursor: pointer;
-    margin: 5px;
     padding: 10px;
 
     border: 0;
     border-radius: 2px;
 
-    min-width: 50px;;
+    min-width: 50px;
+    width: fit-content;
     
     text-align: left;
     box-shadow: 2px 2px 2px 0px rgba(33, 33, 33, 0.77);
@@ -82,7 +82,7 @@ button.secondary.light {
 
 /* Tirtiary */
 button.tirtiary {
-    --text-color: var(--highlight);
+    --text-color: var(--highlight-dark);
     color: var(--text-color);
 
     padding: 5px;

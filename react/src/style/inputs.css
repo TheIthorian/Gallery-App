@@ -9,13 +9,21 @@
 
     width: 100%;
     margin: 15px 0px 15px 0px;
+    display: flex;
+    flex-direction: column;
 }
 .input-group.hidden {
     display: none;
 }
 
 .input-group > label {
-    padding-bottom: 5px;
+    padding-bottom: 0px;
+    margin-bottom: 5px;
+    text-decoration: underline 2px var(--highlight-light);
+
+    color: var(--text-light);
+    
+    width: fit-content;
 }
 
 .input-group > input {
@@ -24,7 +32,36 @@
     outline: none;
     letter-spacing: 0.08em;
     grid-area: input;
-    border: solid 2px var(--outline-dark);
+    background-color: #3A3648;
+    color: var(--text-light);
+    border: none;
+    /* border-bottom: 2px solid var(--highlight-light); */
+    font-size: 24px;
+    padding: 5px;
+    min-width: 0;
+}
+.input-group > input::placeholder {
+    font-style: italic;  
+    font-size: 0.6em;
+    text-indent: 10px;
+ }
+.input-group::after {
+    content: "";
+    width: 0%;
+    display: block;
+    background-color: var(--highlight-light);
+    height: 2px;
+    transition: 400ms;
+}
+.input-group.valid::after {
+    background-color: var(--positive);
+    width: 100%;
+}
+.input-group.complete::after {
+    width: 100%;
+}
+.input-group:hover::after {
+    width: 100%;
 }
 
 .input-group > button {

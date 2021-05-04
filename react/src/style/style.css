@@ -16,7 +16,7 @@ body {
 .page-container {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px auto 1fr;
+  grid-template-rows: 125px auto 1fr;
   grid-template-areas: 
     "header"
     "tools"

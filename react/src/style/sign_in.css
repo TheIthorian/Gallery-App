@@ -1,11 +1,17 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+
+.page-header.login {
+    grid-template-columns: 1fr 0px 0px;
+    min-width: 0;
+}
+
 .background {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(180deg, rgba(242, 127, 47, 0.5) 0%, 
-    rgba(138, 25, 110, 0.5) 100%), #FFFFFF;
+    background-color: var(--background-dark);
+
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
@@ -13,10 +19,8 @@
 }
 
 .parent-container {
-    /* position: absolute; */
     align-items: flex-start;
     margin-top: 10vh;
-    /* justify-content: center; */
 }
 
 .login-form {
@@ -27,30 +31,12 @@
 .input-box {
     display: flex;
     flex-direction: column;
-    background: var(--background-light);
-    box-shadow: 20px 20px 5px rgba(0, 0, 0, 0.25);
-    min-width: 500px;
-}
 
-h1.title { 
-    position: relative;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 48px;
-    line-height: 100%;
-    text-align: center;
-    /* identical to box height, or 96px */
-    
-    letter-spacing: 0.085em;    
-    background: -webkit-linear-gradient(#f2802f7c, #8a196e83);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.login-form > button.primary {
-    border-radius: 10px;
+    background: var(--background-dark);
+    border: 2px solid var(--background-light);
+    box-shadow: 0px 10px 43px 39px rgba(0, 0, 0, 0.25);
+    min-width: 700px;
+    padding-bottom: 50px;
 }
 
 p {
@@ -58,6 +44,7 @@ p {
     text-align: center;
     font-size: 18px;
     margin: 10px 0px 10px 0px;
+    color: var(--text-light);
 }
 p:last-child {
     margin-bottom: 20px;
@@ -67,10 +54,9 @@ p.error-message {
     color: var(--danger);
 }
 
-.input-group > input {
-    border-radius: 5px;
-    padding: 5px;
-} 
+.input-group > label {
+    font-size: 36px;
+}
 
 p.hidden {
     display: none;
@@ -86,17 +72,17 @@ button.tirtiary {
     font-size: 18px;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 720px) {
     .background {
-        min-width: 300px;
-        height: 100vh;
+        /* min-width: 300px; */
+        /* height: 100vh; */
     }
     .parent-container {
       margin: auto;
       height: 100vh;
       width: 100%;
       padding: 20px;
-      min-width: 300px;
+      /* min-width: 300px; */
     }
     .login-form {
         height: 100%;
@@ -109,8 +95,9 @@ button.tirtiary {
         min-width: 0;
         padding: 30px;
     }
-    .title {
-        font-size: 68px;
+    .page-header > .title-text {
+        font-size: 36px !important;
+        text-align: center;
     }
     
   }

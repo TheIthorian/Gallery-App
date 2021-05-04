@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { render } from 'react-dom';
 import {Redirect} from 'react-router-dom';
 
+import "../style/header.css";
 import "../style/sign_in.css";
+
 
 const settings = {
     hostURL: "http://127.0.0.1:5000/",
@@ -29,6 +31,10 @@ console.log(localStorage.getItem("isLoggedIn"));
 
 function SignIn() {
 
+    function decorateInput() {
+        
+    }
+
     let email, password, username;
     let login = false;
     let createAccount = false;
@@ -41,14 +47,48 @@ function SignIn() {
   
     function handleChangeEmail(e) {
         email = e.target.value.toLowerCase();
+        let regex = /^.*[@].*[.].+$/;
+        if (email.length > 5 && regex.test(email)) {
+            e.target.parentNode.classList.add("valid");
+            e.target.parentNode.classList.remove("complete");
+        }
+        else if (email.length > 0) {
+            e.target.parentNode.classList.add("complete");
+            e.target.parentNode.classList.remove("valid");
+        }
+        else {
+            e.target.parentNode.classList.remove("complete");
+            e.target.parentNode.classList.remove("valid");
+        }
     }
 
     function handleChangeUsername(e) {
         username = e.target.value;
+        if (username.length > 0) {
+            e.target.parentNode.classList.add("complete");
+            e.target.parentNode.classList.remove("valid");
+        }
+        else {
+            e.target.parentNode.classList.remove("complete");
+            e.target.parentNode.classList.remove("valid");
+        }
     }
 
     function handleChangePass(e) {
+        // try move this logic to generic function
         password = e.target.value;
+        if (password.length > 5) {
+            e.target.parentNode.classList.add("valid");
+            e.target.parentNode.classList.remove("complete");
+        }
+        else if (password.length > 0) {
+            e.target.parentNode.classList.add("complete");
+            e.target.parentNode.classList.remove("valid");
+        }
+        else {
+            e.target.parentNode.classList.remove("complete");
+            e.target.parentNode.classList.remove("valid");
+        }
         validateForm();
     }
 
@@ -120,10 +160,21 @@ function SignIn() {
 
         if (!email) {email = "";}
 
+        let regex = /^.*[@].*[.].+$/;
+
+        if (email != "" && !regex.test(email)) {
+            error.wording = "Invalid email";
+            error.display = true;
+            error.type = "warning"
+            updateError();
+            return;
+        }
+
         if (password.lenght < 5) {
             error.wording = "Password must be at least 5 characters long";
             error.display = true;
             error.type = "warning"
+            updateError();
             return;
         }
 
@@ -215,23 +266,26 @@ function SignIn() {
 
     return (
         <div className="background">
+            <div className="page-header login"><div className="title-text">PICTURE BANK</div></div>
             <div className="parent-container" >
                 <div className="input-box">
-                    <h1 className="title">Picture Bank</h1>
-                    <form //onSubmit={handleSubmitSignIn} 
-                        className="login-form" method="POST">
+                <p id="sign-up-link">Don't have an account? <button className="tirtiary" onClick={toggleSignUp}>Create one</button></p>
+                <p className="hidden" id="sign-in-link">Already have an account? <button className="tirtiary" onClick={toggleSignUp}>Sign in</button></p>
+                    <form autoComplete="off" //onSubmit={handleSubmitSignIn}                     
+                        className="login-form" method="POST">                        
                         <div className="input-group">
-                            <label for="username">Username: </label>
+                            <label for="username">Username</label>
                             <input name="username" type="text" className="" onChange={handleChangeUsername} />
                         </div>
                         <div className="input-group hidden" id="email-input-group">
-                            <label for="email">Email (Optional): </label>
-                            <input name="email" type="text" className="" onChange={handleChangeEmail} />
+                            <label for="email">Email</label>
+                            <input placeholder="Optional" name="email" type="text" className="" onChange={handleChangeEmail} />
                         </div>
                         <div className="input-group">
-                            <label for="password">Password: </label>
+                            <label for="password">Password</label>
                             <input name="password" type="password" className="" onChange={handleChangePass} />
                         </div>
+                        <p id="ErrorMessage" hidden="true" className="error-message"></p>
                         <button id="sign-in-action" type="submit" className="primary" onClick={handleSubmitSignIn}>
                             Sign In
                         </button>
@@ -239,10 +293,7 @@ function SignIn() {
                             Create Account
                         </button>
                     </form>
-                    <a href={link} id="homelink" hidden="true">Home</a>
-                    <p id="ErrorMessage" hidden="true" className="error-message"></p>
-                    <p id="sign-up-link">Don't have an account? <button className="tirtiary" onClick={toggleSignUp}>Create one</button></p>
-                    <p className="hidden" id="sign-in-link">Already have an account? <button className="tirtiary" onClick={toggleSignUp}>Sign in</button></p>                    
+                    <a href={link} id="homelink" hidden="true">Home</a>                                        
                 </div>
             </div>
         </div>
