@@ -29,12 +29,17 @@ body {
   display: grid;
   grid-template-areas:    
     "add-gallery non none"
-    "small-images non toggle-all"
+    "toggle-all non small-images"
     ;
 
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto;
-  padding: 20px;
+  padding: 10px;
+  position: sticky;
+  position: -webkit-sticky;
+  z-index: 1;
+  top: 0;
+  background-color: var(--background-light);
 }
 .tools-container > * {
   margin-top: 10px;
@@ -43,7 +48,6 @@ body {
 .tools-container > #toggle-all-gallery {
   grid-area: toggle-all;
   margin: 10px 0px 10px 0px;
-  padding: 0;
 }
 
 .tools-container > #add-gallery {
@@ -60,6 +64,10 @@ body {
   align-items: center;
   height: auto;  
   font-family: roboto;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 114px;
+  z-index: 1;
 }
   .gallery-toggle-container > button {
     font-size: 28px;
@@ -342,20 +350,31 @@ div.image-size-toggle {
     top: 95px;
     grid-area: small-images;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
+    align-items: flex-end;
 }
+
+div.image-size-toggle > img {
+  filter: brightness(0);
+  transition: 200ms;
+}
+
+div.image-size-toggle > img.active {
+  filter: invert(48%) sepia(16%) saturate(2247%) hue-rotate(314deg) brightness(95%) contrast(93%);
+  background: none;;
+}
+
 
 /* The switch - the box around the slider */
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 30px;
-    height: 20px;
-    margin-left: 5px;
-    margin-top: 2px;
-  }
+  position: relative;
+  display: flex;
+  width: 25px;
+  height: 15px;
+  border-radius: 5px;
+  margin: 0px 5px 6px 5px;
+}
   
   /* Hide default HTML checkbox */
   .switch input {
@@ -372,36 +391,32 @@ div.image-size-toggle {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: var(--background-dark);
     -webkit-transition: .4s;
     transition: .4s;
-    height: 16px;
+    height: 100%;
+    /* border: solid 1.5px var(--text-dark); */
+    border-radius: 5px;
   }
   
   .slider:before {
     position: absolute;
     content: "";
-    height: 8px;
+    height: calc(100% - 2px);
+    top: 0px;
     width: 8px;
-    left: 4px;
-    bottom: 4px;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
+    border-radius: 5px;
+    border: solid 1px var(--background-dark);
+    background-color: var(--highlight-light);
   }
-  
-  input:checked + .slider {
-    background-color: rgba(138, 25, 110, 0.5);;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px rgba(138, 25, 110, 0.5);;
-  }
-  
+    
   input:checked + .slider:before {
-    -webkit-transform: translateX(14px);
-    -ms-transform: translateX(14px);
-    transform: translateX(14px);
+    -webkit-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
   }
 
 /* 100% Image Width on Smaller Screens */

@@ -7,6 +7,9 @@ import editIcon from '../img/edit.svg';
 import addIcon from '../img/add.svg';
 import removeIcon from '../img/remove.svg';
 
+import sizeSmall from '../img/size-small.svg';
+import sizeLarge from '../img/size-large.svg';
+
 const settings = {
     hostURL: "http://127.0.0.1:5000/",
 }
@@ -20,9 +23,15 @@ class ImageSizeCheckbox extends React.Component {
 
 
     handleClick = () => {
-        let galleryImages = document.getElementsByClassName("picture-container");
-
         let scale = this.active ? 1 : 2;
+
+        let imgLeft = document.getElementsByClassName("image-size-toggle")[0].childNodes[0];
+        let imgRight = document.getElementsByClassName("image-size-toggle")[0].childNodes[2];
+
+        if (scale == 1) {imgLeft.classList.remove("active"); imgRight.classList.add("active");}
+        else {imgLeft.classList.add("active"); imgRight.classList.remove("active");}
+
+        let galleryImages = document.getElementsByClassName("picture-container");        
 
         for (let j = 0; j < galleryImages.length; j++) {
             galleryImages[j].classList.remove("size1", "size2");
@@ -40,11 +49,12 @@ class ImageSizeCheckbox extends React.Component {
     render() {
         return (
             <div className="image-size-toggle">
-                <div>Small Images:</div>
+                <img className="active" src={sizeLarge}/>                
                 <label className="switch">
                     <input type="checkbox" className="image-scale-checkbox" id="image-scale" onClick={this.handleClick} />
                     <span class="slider"></span>
                 </label>
+                <img src={sizeSmall} />                
             </div>
         );
     }
@@ -196,10 +206,14 @@ class Image extends React.Component {
                 <Popup key="UpdateImage" handleClose={this.togglePopup} isPopupOpen={isPopupOpen} content={
                     <>
                         <h3>Edit Image:</h3>
-                        <label for="Title" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="Title" defaultValue={imageData.Title} required/><br />
-                        <label for="URL" >URL: </label><input maxLength="3200" onChange={this.handleOnChange} name="URL" defaultValue={imageData.URL} required/><br />
-                        <button className="primary" type="submit" onClick={this.handleEditImage}>Save</button>
+                        <div className="input-group">
+                            <label for="Title" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="Title" defaultValue={imageData.Title} required/>
+                        </div>
+                        <div className="input-group">
+                            <label for="URL" >URL: </label><input maxLength="3200" onChange={this.handleOnChange} name="URL" defaultValue={imageData.URL} required/>
+                        </div>
                         <p className="error-message left popup">{updateMessage}</p>
+                        <button className="primary" type="submit" onClick={this.handleEditImage}>Save</button><br/>                        
                     </>
                 } />
             </div>
@@ -479,29 +493,40 @@ class Gallery extends React.Component {
                 <Popup key="AddImage" handleClose={this.togglePopup} isPopupOpen={isPopupOpen} content={
                     <>
                         <h3>Add Image:</h3>
-                        <label for="AddImageTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="AddImageTitle" required/><br />
-                        <label for="URL" >URL: </label><input maxLength="2000" onChange={this.handleOnChange} name="URL" required/><br />
+                        <div className="input-group">
+                        <label for="AddImageTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="AddImageTitle" required/>
+                        </div>
+                        <div className="input-group">
+                        <label for="URL" >URL: </label><input maxLength="2000" onChange={this.handleOnChange} name="URL" required/>
+                        </div>
                         {/* Use () => because we want to run the function with that input, 
                     rather than call the function here */}
-                        <button className="primary" type="submit" onClick={() => { this.handleAddImageSubmit(galleryData.GalleryId) }}>Save</button>
                         <p className="error-message left popup">{AddImageMessage}</p>
+                        <button className="primary" type="submit" onClick={() => { this.handleAddImageSubmit(galleryData.GalleryId) }}>Save</button><br/>
+                        
                     </>
                 } />
                 <Popup key="UpdateGallery" handleClose={this.toggleUpdatePopup} isPopupOpen={isUpdatePopupOpen} content={
                     <>
                         <h3>Update Gallery:</h3>
-                        <label for="UpdateGalleryTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="UpdateGalleryTitle" defaultValue={galleryTitle} required/><br />
-                        <button className="primary" type="submit" onClick={() => { this.handleUpdateGallerySubmit(galleryData.GalleryId) }}>Save</button>
+                        <div className="input-group">
+                        <label for="UpdateGalleryTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="UpdateGalleryTitle" defaultValue={galleryTitle} required/>
+                        </div>
                         <p className="error-message left popup">{UpdateGalleryMessage}</p>
+                        <button className="primary" type="submit" onClick={() => { this.handleUpdateGallerySubmit(galleryData.GalleryId) }}>Save</button><br/>
+                        
                     </>
                 } />
                 <Popup key="RemoveGallery" handleClose={this.toggleRemovePopup} isPopupOpen={isRemovePopupOpen} content={
                     <>
                         <h3>Remove Gallery:</h3>
+                        <br />
                         <p className="left popup" >Are you sure you want to remove "{oldGalleryTitle}"?</p>
-                        <button className="primary" type="submit" onClick={() => { this.handleRemoveGallerySubmit(galleryData.GalleryId) }}>Remove</button>
-                        <button className="secondary" type="submit" onClick={() => { this.toggleRemovePopup() }}>Cancel</button>
                         <p className="error-message left popup">{RemoveGalleryMessage}</p>
+                        <div className="button-group">
+                            <button className="primary" type="submit" onClick={() => { this.handleRemoveGallerySubmit(galleryData.GalleryId) }}>Remove</button>
+                            <button className="secondary light" type="submit" onClick={() => { this.toggleRemovePopup() }}>Cancel</button>
+                        </div>
                     </>
                 } />
             </>
@@ -634,7 +659,7 @@ class GalleryPage extends React.Component {
                 <>
                     <div className="tools-container">
                         <ImageSizeCheckbox />
-                        <button id="toggle-all-gallery" className="tirtiary right" onClick={this.toggleAllGalleries}>Toggle All Galleries</button>
+                        <button id="toggle-all-gallery" className="secondary" onClick={this.toggleAllGalleries}>Toggle All</button>
                         <button id="add-gallery" className="primary" onClick={this.toggleAddGalleryPopup}>Add Gallery</button>
                     </div>
                     {galleryList.map((gallery) => (
@@ -643,9 +668,12 @@ class GalleryPage extends React.Component {
                     <Popup handleClose={this.toggleAddGalleryPopup} isPopupOpen={isAddPopupOpen} content={
                         <>
                             <h3>Add Gallery:</h3>
-                            <label for="AddGalleryTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="AddGalleryTitle" />
-                            <button className="primary" type="submit" onClick={() => { this.handleAddGallerySubmit() }}>Save</button>
+                            <div className="input-group">
+                            <label for="AddGalleryTitle" >Title: </label><input maxLength="45" onChange={this.handleOnChange} name="AddGalleryTitle" />                            
+                            </div>
                             <p className="error-message left popup">{AddGalleryMessage}</p>
+                            <button className="primary" type="submit" onClick={() => { this.handleAddGallerySubmit() }}>Save</button>
+                            
                         </>
                     } />
                 </>

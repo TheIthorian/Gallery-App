@@ -40,21 +40,31 @@
 
 .page-header input[type=text] {
     transition: width 0.3s;
-    width: 100px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
     margin-right: 10px;
     grid-area: search;
     float: right;
+    padding: 5px;
+    color: var(--text-light);
 
-    border: solid var(--outline-dark);
-    border-radius: 7px;
+    border: solid var(--text-light) 2px;
     font-size: 17px;
-
-    background-color: var(--background-light);
-    
-} .page-header input[type=text]:focus{
+    background: transparent;
+} 
+.page-header input[type=text]::before {
+   content: url(https://picsum.photos/261);
+}
+.page-header input[type=text]:focus, 
+.page-header input[type=text].complete{
     width: 250px; transition: width 0.5s;
     outline: none;
+}
+
+.page-header input[type=text]::placeholder {
+    color: white; 
+    font-style: italic;   
+
 }
 
 .page-header a, .page-header button {
@@ -62,4 +72,10 @@
     width: 100%;
     text-align: center;
     font-size: 17px;
+}
+
+@media (max-width: 1000px) {
+    .page-header div.title-text {
+        font-size: 48px;
+    }
 }

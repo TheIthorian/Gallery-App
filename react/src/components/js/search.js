@@ -1,13 +1,15 @@
 function imageSearch(input) {    
     //let input = document.getElementById("top-search");
     let filter = input;
-    //console.log(input);
+    console.log(input);
+
+    // Get all images
     let image = document.getElementsByClassName("gallery-image");
     for (let i = 0; i < image.length; i++) {
-        let imageTitle = image[i].nextElementSibling;
+        let imageTitle = image[i].nextElementSibling.childNodes[1];
         let textValue = imageTitle.textContent || imageTitle.innerText;
         if (textValue.toUpperCase().indexOf(filter) > -1) {
-            image[i].parentElement.style.display = "";
+            image[i].parentElement.style.display = "block";
         } else {
             image[i].parentElement.style.display = "none";
         }
@@ -15,14 +17,15 @@ function imageSearch(input) {
 }
 
 function gallerySearch(input){
+    return;
     let filter = input;
     //console.log(input);
-    let gallery = document.getElementsByClassName("picture-content");
+    let gallery = document.getElementsByClassName("gallery-container");
     for (let i = 0; i < gallery.length; i++) {
-        let galleryName = gallery[i].previousElementSibling;
-        let textValue = galleryName.textContent || galleryName.innerText;
-        if (textValue.toUpperCase().indexOf(filter) > -1) {
-            gallery[i].parentElement.style.display = "";
+        let galleryName = gallery[i].childNodes[0].childNodes[0].innerText;
+        console.log(galleryName);
+        if (galleryName.toUpperCase().indexOf(filter) > -1) {
+            gallery[i].parentElement.style.display = "block";
         } else {
             gallery[i].parentElement.style.display = "none";
         }

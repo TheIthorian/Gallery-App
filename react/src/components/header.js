@@ -68,7 +68,7 @@ function Header() {
                 <div className="title-text">Picture Bank</div>
                 <SignUp />
                 <div id="header-search">
-                    <input id="top-search" type="text" autoCapitalize="none" placeholder="Search.." onKeyUp={pageSearch} />
+                    <input id="top-search" type="text" autoCapitalize="none" onKeyUp={pageSearch} />
                 </div>
             </header>
         </>

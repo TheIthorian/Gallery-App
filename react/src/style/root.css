@@ -12,7 +12,8 @@
     --outline-dark: #5e3282;
     --highlight-dark: #A13F85; */
 
-    --background-light: #FAFAFA;
+    /* --background-light: #FAFAFA; */
+    --background-light: #fffaee;
     --text-light: #FAFAFA;
     --ouline-light: #EA5A5A;
     --highlight-light: #EA5A5A;
@@ -29,3 +30,4 @@
 
     font-family: Roboto !important;
 }
+
