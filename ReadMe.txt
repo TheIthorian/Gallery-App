@@ -1,7 +1,7 @@
-# ReadMe
+# Gallery App
 
-Hi, welcome to the gallery App project.
+Gallery app where you can bookmark your favourite images.
 
-I'm new to git and I'm using this project to learn how it all works!
+Demo:
 
-Changed
+![ Demo](Example.gif) [](Example.gif)
