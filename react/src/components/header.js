@@ -1,10 +1,12 @@
 import logo from '../img/bank.svg';
+import searchIcon from '../img/search.svg';
 //https://codesandbox.io/s/vvoqvk78?from-embed=&file=/components/FullRoster.js
 //https://codesandbox.io/s/vvoqvk78?from-embed=&file=/components/Main.js
 import { Link } from 'react-router-dom';
 import React from 'react';
 
 import { pageSearch } from './js/search.js';
+
 
 class SignUp extends React.Component {
 
@@ -69,6 +71,7 @@ function Header() {
                 <SignUp />
                 <div id="header-search">
                     <input id="top-search" type="text" autoCapitalize="none" onKeyUp={pageSearch} />
+                    <label for="top-search"><img src={searchIcon}/></label>
                 </div>
             </header>
         </>

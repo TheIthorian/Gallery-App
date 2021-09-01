@@ -2,8 +2,12 @@ Useful JS.txt
 DevSugs.txt
 Examples.txt
 launch Info.txt
+Build App.lnk
+Start Server.lnk
 
 .Admin/DBInfo.txt
+.Admin/DB/img.txt
+.Admin/*
 src/config/ServerConfig.xml
 src/venv/
 src/__pycache__/

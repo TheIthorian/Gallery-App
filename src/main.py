@@ -5,12 +5,15 @@
 
 """
 Todo:
+    # Add schema validation https://json-schema.org/understanding-json-schema/
+    # Add logging
 
 """
 
 from app import app
 from flask import jsonify, request
 from flask import jsonify, flash, request, g
+from jsonschema import validate
 
 # App components
 import user
@@ -137,6 +140,14 @@ def printResponse(response):
         print("unable to print data: ", str(e))
 
 
+def validateSchema(schema, data):
+    try:
+        validate(instance=data, schema=schema)
+        return [True, None]
+    except Exception as e :
+        result = str(e)
+        return [False, result[:result.index("\n")]]
+
 
 
 # Called before request is processed
@@ -233,10 +244,24 @@ def excludeUserAuthentication(function):
 @excludeUserAuthentication
 def debug (repeats):
 
-    userProfile = user.UserProfile()
-    userProfile.constructUserProfile(16)
+    return ({'Message':'None'})
 
-    return ({'Message':'Inserted (' + str(repeats) + ') images'})
+    userProfile = user.UserProfile()
+    userProfile.constructUserProfile(22)
+    galleryId = 116
+
+    for i in range(0, len(imageList)):
+        inputs = {
+            'GalleryId': galleryId,
+            'Title': '# ' + str(i),
+            'URL': imageList[i],
+            'Image': 'xx',
+            'PublicImageIndicator': 5
+        }
+        image.addImage(inputs, userProfile)
+
+
+    return ({'Message':'Inserted (' + len(imageList) + ') images'})
 
     for i in range(0, repeats):
         galleryId = 101
@@ -356,17 +381,28 @@ def _logout():
 
 @app.route('/Gallery/<int:galleryId>/AddImage', methods=["POST"])
 def _addImage(galleryId):
+
+    schema = {
+        "type" : "object",
+        "properties" : {
+            "Title" : {"type" : "string", "maxLength" : 45},
+            "URL" : {"type" : "string", "maxLength" : 32000}
+            #"PublicImageIndicator" : {}
+            #"Image" : {}
+            },
+        "required" : ["Title"]
+    }
+
+    requestData = request.json
+    result = validateSchema(schema, requestData)
+    if not result[0]:
+        return formatOutput([2, None, result[1]])
+
+
     userProfile = user.UserProfile()    
     userProfile.constructUserProfile(int(g.userId))
 
     requestData = request.json
-
-    # Validate inputs - should use open source for this
-    """fields = ['Title', 'URL', 'Image', 'PublicImageIndicator']
-
-    for field in fields:
-        if field not in requestData:
-            return formatOutput([3, None, 'Schema Error: Missing ' + field])"""
 
     inputs = {
         'GalleryId': galleryId,
@@ -442,10 +478,25 @@ def _removeImage(galleryId, imageId):
 
 @app.route('/AddGallery', methods=["POST"])
 def _addGallery():
-    userProfile = user.UserProfile()    
-    userProfile.constructUserProfile(int(g.userId))
+
+    #https://json-schema.org/understanding-json-schema/
+    
+    schema = {
+        "type" : "object",
+        "properties" : {
+            "Title" : {"type" : "string", "maxLength" : 45}
+            },
+        "required" : ["Title"]
+    }
 
     requestData = request.json
+    result = validateSchema(schema, requestData)
+    if not result[0]:
+        return formatOutput([2, None, result[1]])
+
+
+    userProfile = user.UserProfile()    
+    userProfile.constructUserProfile(int(g.userId))
 
     # Validate inputs - should use open source for this
     if len(requestData['Title']) > 45:
@@ -458,8 +509,8 @@ def _addGallery():
     return formatOutput(output)
 
 
-@app.route('/GetGallery/', methods=["GET"])
-@app.route('/GetGallery/<int:galleryId>', methods=["GET"])
+@app.route('/GetGallery/', methods=["GET"]) # All galleries
+@app.route('/GetGallery/<int:galleryId>', methods=["GET"]) # specific gallery
 def _getGallery(galleryId = -1):
 
     if g.userId is None:
@@ -476,6 +527,19 @@ def _getGallery(galleryId = -1):
 @app.route('/UpdateGallery/', methods=["POST"])
 @app.route('/UpdateGallery/<int:galleryId>', methods=["POST"])
 def _updateGallery(galleryId = -1):
+    schema = {
+        "type" : "object",
+        "properties" : {
+            "Title" : {"type" : "string", "maxLength" : 45}
+            },
+        "required" : ["Title"]
+    }
+
+    requestData = request.json
+    result = validateSchema(schema, requestData)
+    if not result[0]:
+        return formatOutput([2, None, result[1]])
+
 
     if g.userId is None:
         return formatOutput([3, None, 'Unable to authenticate user'])

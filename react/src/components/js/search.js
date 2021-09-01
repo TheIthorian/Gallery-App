@@ -27,14 +27,15 @@ function gallerySearch(input){
         if (galleryName.toUpperCase().indexOf(filter) > -1) {
             gallery[i].parentElement.style.display = "block";
         } else {
-            gallery[i].parentElement.style.display = "none";
+            gallery[i].parentElement.style.display = "none"; 
         }
     }
 }
 
 export function pageSearch(event){
     let input = event.target.value.toUpperCase();
-    console.log(input);
+    if (input.length > 0) {event.target.classList.add("complete");}
+    else {event.target.classList.remove("complete");}
     
     try {
         input = document.getElementById("top-search").value.toUpperCase();

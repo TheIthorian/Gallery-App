@@ -63,6 +63,9 @@
 .input-group:hover::after {
     width: 100%;
 }
+.input-group:focus-within::after {
+    width: 100%;    
+}
 
 .input-group > button {
     position: relative;

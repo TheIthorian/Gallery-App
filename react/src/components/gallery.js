@@ -116,7 +116,7 @@ class Image extends React.Component {
         fetch(settings.hostURL + 'Gallery/' + this.props.imageData.GalleryId + '/RemoveImage/' + imageId, requestOptions)
             .then(res => res.json())
             .then((data) => {
-                console.log(data);
+                // console.log(data);
                 if (data.Result == 'Success') {
                     document.getElementById("ImageId:" + imageId).style.display ='none';
                 } else { console.log("Error removing image"); }
@@ -126,8 +126,6 @@ class Image extends React.Component {
 
 
     handleEditImage = () => {
-        console.log(this.state.updateTitle, this.state.updateURL) ;
-
         if(this.state.updateTitle.length == 0) {
             this.setState({updateMessage : "The title cannot be empty"});
             return;
@@ -154,7 +152,7 @@ class Image extends React.Component {
         fetch(settings.hostURL + 'Gallery/' + this.props.imageData.GalleryId + '/Image/' + imageId + '/Update', requestOptions)
             .then(res => res.json())
             .then((data) => {
-                console.log(data);
+                // console.log(data);
                 if (data.Result == 'Success') {
                     let selectedImage = document.getElementById("ImageId:" + imageId);
                     selectedImage.childNodes[1].childNodes[1].innerText = data.Message.Title;
@@ -185,19 +183,19 @@ class Image extends React.Component {
         }
         if (e.target.name == "Title") {
             Title = e.target.value
-            console.log(Title);
             this.setState({ updateTitle: Title });
         }
-        console.log(this.state.updateTitle, this.state.updateURL);
     }
 
 
     render() {
         const { imageData } = this.props;
         const { isPopupOpen, updateMessage } = this.state;
+        let hidden = imageData.hidden ? 'hidden' : '';
+        let containerClass = `picture-container size2 ${hidden}`;
         return (
-            <div value={imageData.ImageId} id={"ImageId:" + imageData.ImageId}  className="picture-container size2" >
-                <img onClick={this.handleClick} className="gallery-image" src={imageData.URL} alt={imageData.Title} />
+            <div value={imageData.ImageId} id={"ImageId:" + imageData.ImageId}  className={containerClass}  >
+                <img loading="lazy" onClick={this.handleClick} className="gallery-image" src={imageData.URL} alt={imageData.Title} />
                 <span className="title">
                     <input type="image" src={removeIcon} value={imageData.ImageId} onClick={this.handleRemoveImage} className="left"/>
                     <span className="title-text">{imageData.Title}</span>
@@ -270,6 +268,10 @@ class Gallery extends React.Component {
             .then(res => res.json())
             .then((data) => {
                 if (data.Result == 'Success') {
+                    for(const message of data.Message) {
+                        message.hidden = true;
+                    }
+                    // console.log(data.Message);
                     this.setState({ imageList: data.Message })
                 } else { this.setState({ imageList: null }) }
             })
@@ -307,7 +309,6 @@ class Gallery extends React.Component {
         }
         if (e.target.name == "UpdateGalleryTitle") {
             Title = e.target.value
-            console.log(Title);
             this.setState({ galleryTitle: Title });
         }
     }
@@ -341,9 +342,11 @@ class Gallery extends React.Component {
             .then(res => res.json())
             .then((data) => {
                 if (data.Result == 'Success') {
-                    console.log(data);
+                    // console.log(data);
                     let newImageList = this.state.imageList;
-                    newImageList.push(data.Message);
+                    let newImage = data.Message;
+                    newImage.hidden = false;
+                    newImageList.push(newImage);                    
 
                     this.setState({
                         isPopupOpen: false,
@@ -354,7 +357,7 @@ class Gallery extends React.Component {
                     this.setState({ AddImageMessage: "Uanble to add image: " + data.Result });
                 }
             })
-            .catch(console.log);
+            .catch(console.log);            
 
         //const { galleryData } = this.props;
         //this.getGalleryImages(galleryData.GalleryId);
@@ -383,7 +386,7 @@ class Gallery extends React.Component {
                 console.log(data);
                 if (data.Result == 'Success') {
                     for (let i = 0; i < data.Message.length; i++) {
-                        console.log("" + data.Message[i].GalleryId + ":" + this.props.galleryData.GalleryId + ":" + this.galleryId);
+                        // console.log("" + data.Message[i].GalleryId + ":" + this.props.galleryData.GalleryId + ":" + this.galleryId);
                         if (data.Message[i].GalleryId == this.props.galleryData.GalleryId) {
                             this.setState({
                                 galleryTitle: data.Message[i].Title,
@@ -448,16 +451,18 @@ class Gallery extends React.Component {
             if (this.isGalleryOpen) {
                 galleryButton.classList.remove("active");
 
-                content.style.display = null;
-                content.style.maxHeight = '0%';
-
-                content.childNodes[1].style.display = 'none';
+                // Image
+                content.classList.add("hidden");
+                // Title
+                content.childNodes[1].classList.add("hidden");
             } else {
                 galleryButton.classList.add("active");
-                content.style.display = 'block';
-                content.style.maxHeight = null;
+                // content.style.display = 'block';
+                // content.style.maxHeight = null;
 
                 //content.childNodes[1].style.maxHeight = '100%';
+                content.classList.remove("hidden");
+                content.childNodes[1].classList.remove("hidden");
                                 
             }
             content = content.nextElementSibling;
@@ -521,7 +526,7 @@ class Gallery extends React.Component {
                     <>
                         <h3>Remove Gallery:</h3>
                         <br />
-                        <p className="left popup" >Are you sure you want to remove "{oldGalleryTitle}"?</p>
+                        <p className="left popup center" >Are you sure you want to remove "{oldGalleryTitle}"?</p>
                         <p className="error-message left popup">{RemoveGalleryMessage}</p>
                         <div className="button-group">
                             <button className="primary" type="submit" onClick={() => { this.handleRemoveGallerySubmit(galleryData.GalleryId) }}>Remove</button>
@@ -598,7 +603,7 @@ class GalleryPage extends React.Component {
         fetch(settings.hostURL + 'AddGallery', requestOptions)
             .then(res => res.json())
             .then((data) => {
-                console.log(data);
+                // console.log(data);
                 if (data.Result == 'Success') {
                     this.setState({ 
                         galleryList: data.Message, 

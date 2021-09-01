@@ -19,7 +19,7 @@ def addImage (inputs, userProfile):
             'Description': 'Data Authorisation Error: UserGalleryId'
         }
 
-        return [2, None, 'Data Authorisation Error: UserGalleryId']
+        return [2, None, 'Data Authorisation Error: UserGalleryId'] # remove
 
     if inputs['Image'] is None:
         inputs['Image'] = ""
@@ -54,6 +54,15 @@ def addImage (inputs, userProfile):
     imageId = server.serverConnection.runInsertQuery("Image","ImageInsert", queryInputs)
 
     image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]
+
+    responsePayload.messages.append( {  
+        'GalleryId' : inputs['GalleryId'],
+        'ImageId': image['ImageId'],
+        'Title': image['Title'], 
+        'URL': image['URL'],
+        'Image': '0'
+    })
+    
 
     return [
         0, 
