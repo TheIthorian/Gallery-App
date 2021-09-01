@@ -14,13 +14,13 @@ FROM Users
 WHERE Username = %(Username)s
 		</SQL>
 	</Query>		
-	<Query Name="UsrInsert" Outputs="0" Inputs="8">
+	<Query Name="UsrInsert">
 		<SQL>
 INSERT INTO Users (Username, Email, Password, PasswordSalt, AdminInd, Status) 
 Values (%(Username)s, %(Email)s, %(Password)s, %(PasswordSalt)s, %(AdminInd)s, %(Status)s)
 		</SQL>
 	</Query>	
-	<Query Name="ValidatePasswordForUser" Outputs="2" Inputs="1">
+	<Query Name="ValidatePasswordForUser">
 		<SQL>
 SELECT 
 	UserId AS UserId,
@@ -34,13 +34,13 @@ WHERE Status = 1
 AND Username = %(Username)s
 		</SQL>
 	</Query>
-	<Query Name="CreateUserSession" Outputs="0" Inputs="1">
+	<Query Name="CreateUserSession">
 		<SQL>
 INSERT INTO UsrSession (SessionID, UsrRef, LoginTime)
 SELECT %(SessionID)s, %(UserId)s, SysDate() FROM Users U WHERE U.UserId = %(UserId2)s AND NOT EXISTS (SELECT 1 FROM UsrSession WHERE UsrRef = U.UserId)
 		</SQL>
 	</Query>
-	<Query Name="GetUserSession" Outputs="0" Inputs="1">
+	<Query Name="GetUserSession">
 		<SQL>
 SELECT 
 	U.UserId AS UserId,
@@ -54,12 +54,12 @@ WHERE US.UsrRef = U.UserId
 AND US.SessionID = %(SessionID)s
 		</SQL>
 	</Query>
-	<Query Name="DeleteUserSession" Outputs="0" Inputs="1">
+	<Query Name="DeleteUserSession">
 		<SQL>
 DELETE FROM UsrSession WHERE UsrRef = %(UserId)s
 		</SQL>
 	</Query>
-	<Query Name="GetUserSecurityProfile" Outputs="0" Inputs="5">
+	<Query Name="GetUserSecurityProfile">
 		<SQL>
 SELECT 
 	U.UserId AS UserId,

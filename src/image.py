@@ -37,20 +37,18 @@ def addImage (inputs, userProfile):
     else:
         publicImageUserId = None
 
-    # Save image to system and save path
-
 
     # Insert the image data           
     queryInputs = {
         'Title':inputs['Title'], 
         'URL':inputs['URL'], 
-        'Path':'xx',  
+        'Path':'xx',  # Curently unused. Will be used for file path to uploaded image
         'Status':1, 
         'GalleryId':inputs['GalleryId'],
         'UserId':userProfile.userId,
         'AddedByUserId':userProfile.userId
     }
-    print(queryInputs)
+    # print(queryInputs)
     imageId = server.serverConnection.runInsertQuery("Image","ImageInsert", queryInputs)
 
     image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]

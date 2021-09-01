@@ -31,10 +31,6 @@ console.log(localStorage.getItem("isLoggedIn"));
 
 function SignIn() {
 
-    function decorateInput() {
-        
-    }
-
     let email, password, username;
     let login = false;
     let createAccount = false;
@@ -43,11 +39,15 @@ function SignIn() {
         
         if (!username || !password) {return false;}
         else {return username.length > 0 && password.length > 4;}     
+
     }
   
+    // Used to store email as it's typed
     function handleChangeEmail(e) {
         email = e.target.value.toLowerCase();
         let regex = /^.*[@].*[.].+$/;
+
+        // Set the style when the email is valid
         if (email.length > 5 && regex.test(email)) {
             e.target.parentNode.classList.add("valid");
             e.target.parentNode.classList.remove("complete");
@@ -62,6 +62,7 @@ function SignIn() {
         }
     }
 
+    // Used to store username as it's typed
     function handleChangeUsername(e) {
         username = e.target.value;
         if (username.length > 0) {
@@ -74,8 +75,8 @@ function SignIn() {
         }
     }
 
+    // Used to store password as it's typed
     function handleChangePass(e) {
-        // try move this logic to generic function
         password = e.target.value;
         if (password.length > 5) {
             e.target.parentNode.classList.add("valid");
@@ -94,6 +95,7 @@ function SignIn() {
 
     function handleSubmitSignIn(event) {
         
+        // Prevent changing location
         event.preventDefault();
 
         if (!username || !password) {
@@ -105,12 +107,14 @@ function SignIn() {
         }
         
 
-        let potentialSessionId = generateId();
-        if (localStorage.getItem('sessionId')) {
-            potentialSessionId = localStorage.getItem('sessionId');
-        }
+        let sessionId;
 
-        let sessionId = potentialSessionId;
+        // Generate new id if none exists
+        if (localStorage.getItem('sessionId')) {
+            sessionId = localStorage.getItem('sessionId');
+        }
+        else { sessionId = generateId() }
+
 
         //console.log(sessionId);
 
@@ -144,7 +148,6 @@ function SignIn() {
               error.display = true;
               error.wording = data.Result;
               updateError();
-              //alert('Login Failed: ' + error.wording);
           }
         })
         .catch(console.log); 
@@ -178,12 +181,11 @@ function SignIn() {
             return;
         }
 
-        let potentialSessionId = generateId();
+        let sessionId;
         if (localStorage.getItem('sessionId')) {
-            potentialSessionId = localStorage.getItem('sessionId');
+            sessionId = localStorage.getItem('sessionId');
         }
-
-        let sessionId = potentialSessionId;
+        else { sessionId = generateId();}
 
         console.log(sessionId);
 
@@ -229,7 +231,7 @@ function SignIn() {
         wording : ""
     };
 
-    
+    // Display the error message
     function updateError() {  
         let Errormessage = document.getElementById("ErrorMessage");      
         Errormessage.class = "error-message " + error.type;
@@ -237,6 +239,7 @@ function SignIn() {
         Errormessage.innerText = error.wording;
     }
 
+    // Toggle between sign up page and register
     function toggleSignUp () {
         console.log(createAccount);
 

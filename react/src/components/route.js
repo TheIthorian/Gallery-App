@@ -6,15 +6,13 @@ import { Route, IndexRoute } from 'react-router';
  */
 import Index from './index';
 import SignIn from './components/sign-in';
+import Logout from './components/Logout';
 
-/**
- * All routes go here.
- * Don't forget to import the components above after adding new route.
- */
 export default (
   <Route path="/">
     <IndexRoute component={Index} />
     <Route path="/sign-in" component={SignIn} />
+    <Route path="/logout" component={Logout} />
   </Route>
 );
 

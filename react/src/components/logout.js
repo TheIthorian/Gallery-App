@@ -1,7 +1,8 @@
 
-
-function logOut() {
-    let sessionId = localStorage.getItem("sessionId")
+// Logs user out of current session and changes location 
+// ** Unused **
+function Logout() {
+    let sessionId = localStorage.getItem("sessionId");
 
     let requestOptions = {
         method: 'POST',
@@ -21,7 +22,7 @@ function logOut() {
           localStorage.setItem('isLoggedIn', false);
           requestOptions.localStorage.setItem("sessionId", "");
           alert('Logout Successful')
-          //window.location.href = '/';
+          window.location.href = '/';
       } else {
           alert('Logout Failed: ' + data.Result);
       }
@@ -29,9 +30,8 @@ function logOut() {
     .catch(console.log)        
 
     return(
-        <div>hello
-         
-        </div>
+        <>
+        </>
     );
     }
 

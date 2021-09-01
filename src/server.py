@@ -125,12 +125,6 @@ class Server ():
         query = self.SQLqueries[file][queryName]
         cursor = conn.cursor(pymysql.cursors.DictCursor)
 
-        if False:
-            print("\nQuery: ", queryName, query)
-            for i in inputs:
-                value = inputs[i]
-                print("Key: ", i, "\tValue: ", value, type(value))
-
         cursor.execute(query, inputs)
         result = cursor.lastrowid
         conn.commit()

@@ -38,8 +38,7 @@ class SignUp extends React.Component {
             }
         })
         .catch(console.log)
-
-        //window.location.href = '/sign-in';
+        
     }
 
     render() {

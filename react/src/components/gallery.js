@@ -436,8 +436,7 @@ class Gallery extends React.Component {
 
     toggleGallery = (e) => {
         // This should probably run getImages for the gallery so we don't have to load all the images at first
-
-        // 
+        
         let content = e.target.parentNode;
         content = content.nextElementSibling;
 

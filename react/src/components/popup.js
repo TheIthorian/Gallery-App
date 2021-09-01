@@ -8,9 +8,6 @@ class Popup extends React.Component {
         }
     }
 
-    componentDidUpdate(nextProps) {
-    }
-
 
     togglePopup = () => {
         this.setState({isPopupOpenState: !this.state.isPopupOpenState});
