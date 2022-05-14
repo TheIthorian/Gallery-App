@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Config>
-	<Server servername="localhost" username="root" password="Password" dbname="gallery" directoryroot="\Gallery"/>
+	<Server servername="localhost" username="root" password="" dbname="gallery" directoryroot="\Gallery"/>
 	<AppInfo siteversion="0.0.1"/>
 	<DebugConfig>
 		<ReturnStackTrace>True</ReturnStackTrace>
