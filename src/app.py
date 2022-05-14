@@ -14,7 +14,7 @@ cache = Cache(app)
 
 CORS(app)
 
-app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['CACHE_TYPE'] = 'simple'
 
