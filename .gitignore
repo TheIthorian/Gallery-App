@@ -8,7 +8,6 @@ Start Server.lnk
 .Admin/DBInfo.txt
 .Admin/DB/img.txt
 .Admin/*
-src/config.py
 src/venv/
 src/venv_old/
 src/__pycache__/
