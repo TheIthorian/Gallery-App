@@ -10,5 +10,6 @@ Start Server.lnk
 .Admin/*
 src/config/ServerConfig.xml
 src/venv/
+src/venv_old/
 src/__pycache__/
 src/config.py
