@@ -12,7 +12,7 @@ Gallery app where you can bookmark your favourite images.
 
 3. Set up the mysql database and run the sql script in .Admin/Release Scripts
 
-4. Rename `src/config_template.py` to `src/config.py` and populate the database attributes
+4. Open `src/config.py` and populate the database attributes
 
 5. Check node is installed with `npm --version`. If not, install node.js
 
