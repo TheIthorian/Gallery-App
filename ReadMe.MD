@@ -2,7 +2,7 @@
 
 Gallery app where you can bookmark your favourite images.
 
-## Install
+## Installation
 
 1. Make sure python 3 is installed
    -   Use `python --version` to check. If it is installed, you should see which version is installed.
