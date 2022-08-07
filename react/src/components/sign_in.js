@@ -272,7 +272,7 @@ function SignIn() {
                         method='POST'
                     >
                         <div className='input-group'>
-                            <label for='username'>Username</label>
+                            <label htmlFor='username'>Username</label>
                             <input
                                 name='username'
                                 type='text'
@@ -281,7 +281,7 @@ function SignIn() {
                             />
                         </div>
                         <div className='input-group hidden' id='email-input-group'>
-                            <label for='email'>Email</label>
+                            <label htmlFor='email'>Email</label>
                             <input
                                 placeholder='Optional'
                                 name='email'
@@ -291,7 +291,7 @@ function SignIn() {
                             />
                         </div>
                         <div className='input-group'>
-                            <label for='password'>Password</label>
+                            <label htmlFor='password'>Password</label>
                             <input
                                 name='password'
                                 type='password'

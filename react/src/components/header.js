@@ -76,7 +76,7 @@ function Header() {
                 <SignUp />
                 <div id='header-search'>
                     <input id='top-search' type='text' autoCapitalize='none' onKeyUp={pageSearch} />
-                    <label for='top-search'>
+                    <label htmlFor='top-search'>
                         <img src={searchIcon} alt='search' />
                     </label>
                 </div>

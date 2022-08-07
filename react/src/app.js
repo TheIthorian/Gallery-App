@@ -1,7 +1,7 @@
 import Home from './components/home';
 import SignIn from './components/sign_in';
 
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import './style/header.css';
 import './style/style.css';
@@ -11,14 +11,14 @@ import './style/inputs.css';
 function App() {
     return (
         <main>
-            <Switch>
+            <Routes>
                 <Route
                     exact
                     path='/'
-                    component={localStorage.getItem('isLoggedIn') ? Home : SignIn}
+                    element={localStorage.getItem('isLoggedIn') ? <Home /> : <SignIn />}
                 />
-                <Route path='/sign-in' component={SignIn} />
-            </Switch>
+                <Route path='/sign-in' element={<SignIn />} />
+            </Routes>
         </main>
     );
 }

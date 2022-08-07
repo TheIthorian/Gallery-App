@@ -58,7 +58,7 @@ class ImageSizeCheckbox extends React.Component {
                         id='image-scale'
                         onClick={this.handleClick}
                     />
-                    <span class='slider'></span>
+                    <span className='slider'></span>
                 </label>
                 <img src={sizeSmall} alt='small icons' />
             </div>
@@ -258,7 +258,7 @@ class Image extends React.Component {
                         <>
                             <h3>Edit Image:</h3>
                             <div className='input-group'>
-                                <label for='Title'>Title: </label>
+                                <label htmlFor='Title'>Title: </label>
                                 <input
                                     maxLength='45'
                                     onChange={this.handleOnChange}
@@ -268,7 +268,7 @@ class Image extends React.Component {
                                 />
                             </div>
                             <div className='input-group'>
-                                <label for='URL'>URL: </label>
+                                <label htmlFor='URL'>URL: </label>
                                 <input
                                     maxLength='3200'
                                     onChange={this.handleOnChange}
@@ -570,7 +570,7 @@ class Gallery extends React.Component {
             isRemovePopupOpen,
             RemoveGalleryMessage,
         } = this.state;
-
+        console.log(imageList);
         return (
             <>
                 <div id={'GalleryId:' + galleryData.GalleryId} className='gallery-container'>
@@ -579,7 +579,7 @@ class Gallery extends React.Component {
                             {oldGalleryTitle}
                             {/* , ID:{galleryData.GalleryId}, Image Count:({galleryData.ImageCount}) */}
                         </button>
-                        <button class='image-count custom'>[{imageList.length}]</button>
+                        <button className='image-count custom'>[{imageList.length}]</button>
                         <button className='action custom' onClick={this.toggleRemovePopup}>
                             <img src={removeIcon} alt='remove gallery' />
                         </button>
@@ -591,7 +591,11 @@ class Gallery extends React.Component {
                         </button>
                     </div>
                     {imageList.map(image => (
-                        <Image hidden={isGalleryOpen} key={image.ImageId} imageData={image} />
+                        <Image
+                            hidden={isGalleryOpen}
+                            key={'' + image.GalleryId + ':' + image.ImageId}
+                            imageData={image}
+                        />
                     ))}
                 </div>
                 <Popup
@@ -602,7 +606,7 @@ class Gallery extends React.Component {
                         <>
                             <h3>Add Image:</h3>
                             <div className='input-group'>
-                                <label for='AddImageTitle'>Title: </label>
+                                <label htmlFor='AddImageTitle'>Title: </label>
                                 <input
                                     maxLength='45'
                                     onChange={this.handleOnChange}
@@ -611,7 +615,7 @@ class Gallery extends React.Component {
                                 />
                             </div>
                             <div className='input-group'>
-                                <label for='URL'>URL: </label>
+                                <label htmlFor='URL'>URL: </label>
                                 <input
                                     maxLength='2000'
                                     onChange={this.handleOnChange}
@@ -643,7 +647,7 @@ class Gallery extends React.Component {
                         <>
                             <h3>Update Gallery:</h3>
                             <div className='input-group'>
-                                <label for='UpdateGalleryTitle'>Title: </label>
+                                <label htmlFor='UpdateGalleryTitle'>Title: </label>
                                 <input
                                     maxLength='45'
                                     onChange={this.handleOnChange}
@@ -843,7 +847,7 @@ class GalleryPage extends React.Component {
                         </button>
                     </div>
                     {galleryList.map(gallery => (
-                        <Gallery galleryData={gallery} />
+                        <Gallery key={gallery.GalleryId} galleryData={gallery} />
                     ))}
                     <Popup
                         handleClose={this.toggleAddGalleryPopup}
@@ -852,7 +856,7 @@ class GalleryPage extends React.Component {
                             <>
                                 <h3>Add Gallery:</h3>
                                 <div className='input-group'>
-                                    <label for='AddGalleryTitle'>Title: </label>
+                                    <label htmlFor='AddGalleryTitle'>Title: </label>
                                     <input
                                         maxLength='45'
                                         onChange={this.handleOnChange}
