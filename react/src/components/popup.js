@@ -15,7 +15,6 @@ class Popup extends React.Component {
 
     render() {
         let { content, isPopupOpen, handleClose } = this.props;
-        let { isPopupOpenState } = this.state;
         if (isPopupOpen) {
             return (
                 <div key={this.props.isPopupOpen} className='popup-box'>

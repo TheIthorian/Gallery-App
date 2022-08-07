@@ -4,7 +4,7 @@ import ScriptTag from 'react-script-tag';
 import './js/page-load.js';
 import './js/search.js';
 
-import { Header, Footer } from './header.js';
+import { Header } from './header.js';
 import { GalleryPage, ImageModal } from './gallery.js';
 
 class Head extends React.Component {
