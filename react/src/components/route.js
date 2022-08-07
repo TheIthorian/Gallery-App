@@ -9,10 +9,9 @@ import SignIn from './components/sign-in';
 import Logout from './components/Logout';
 
 export default (
-  <Route path="/">
-    <IndexRoute component={Index} />
-    <Route path="/sign-in" component={SignIn} />
-    <Route path="/logout" component={Logout} />
-  </Route>
+    <Route path='/'>
+        <IndexRoute component={Index} />
+        <Route path='/sign-in' component={SignIn} />
+        <Route path='/logout' component={Logout} />
+    </Route>
 );
-
