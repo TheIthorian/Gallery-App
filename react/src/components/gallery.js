@@ -115,7 +115,10 @@ class Image extends React.Component {
         let imageId = e.target.value;
         let requestOptions = {
             method: 'DELETE',
-            headers: { sessionId: localStorage.getItem('sessionId') },
+            headers: {
+                sessionId: localStorage.getItem('sessionId'),
+                'Content-Type': 'application/json',
+            },
         };
 
         fetch(
@@ -331,7 +334,10 @@ class Gallery extends React.Component {
     getGalleryImages(GalleryId) {
         let requestOptions = {
             method: 'GET',
-            headers: { sessionId: localStorage.getItem('sessionId') },
+            headers: {
+                sessionId: localStorage.getItem('sessionId'),
+                'Content-Type': 'application/json',
+            },
         };
 
         fetch(settings.hostURL + 'Gallery/' + GalleryId + '/Images', requestOptions)
@@ -720,7 +726,7 @@ class GalleryPage extends React.Component {
         let requestOptions = {
             method: 'GET',
             headers: {
-                //'Content-Type': 'application/json' ,
+                'Content-Type': 'application/json',
                 sessionId: localStorage.getItem('sessionId'),
             },
         };
