@@ -1,6 +1,4 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
 
 .page-header.login {
     grid-template-columns: 1fr 0px 0px;
@@ -26,7 +24,6 @@
 .login-form {
     margin: 0px 50px 0px 50px;
 }
-
 
 .input-box {
     display: flex;
@@ -78,11 +75,11 @@ button.tirtiary {
         /* height: 100vh; */
     }
     .parent-container {
-      margin: auto;
-      height: 100vh;
-      width: 100%;
-      padding: 20px;
-      /* min-width: 300px; */
+        margin: auto;
+        height: 100vh;
+        width: 100%;
+        padding: 20px;
+        /* min-width: 300px; */
     }
     .login-form {
         height: 100%;
@@ -99,6 +96,4 @@ button.tirtiary {
         font-size: 36px !important;
         text-align: center;
     }
-    
-  }
-
+}

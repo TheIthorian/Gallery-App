@@ -14,20 +14,19 @@
 
     /* --background-light: #FAFAFA; */
     --background-light: #fffaee;
-    --text-light: #FAFAFA;
-    --ouline-light: #EA5A5A;
-    --highlight-light: #EA5A5A;
+    --text-light: #fafafa;
+    --ouline-light: #ea5a5a;
+    --highlight-light: #ea5a5a;
 
-    --background-dark: #2C2937;
-    --text-dark: #29202B;
-    --outline-dark: #EA5A5A;
-    --highlight-dark: #EA5A5A;
+    --background-dark: #2c2937;
+    --text-dark: #29202b;
+    --outline-dark: #ea5a5a;
+    --highlight-dark: #ea5a5a;
 
     --danger: rgb(158, 60, 60);
-    --danger: #EA5A5A;
+    --danger: #ea5a5a;
 
     --positive: rgb(57, 146, 57);
 
     font-family: Roboto !important;
 }
-
