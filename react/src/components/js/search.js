@@ -1,7 +1,6 @@
 function imageSearch(input) {
     //let input = document.getElementById("top-search");
-    let filter = input;
-    console.log(input);
+    let filter = input.trim();
 
     // Get all images
     let image = document.getElementsByClassName('gallery-image');
@@ -17,23 +16,24 @@ function imageSearch(input) {
 }
 
 function gallerySearch(input) {
-    return;
-    let filter = input;
-    //console.log(input);
+    let filter = input.trim();
     let gallery = document.getElementsByClassName('gallery-container');
     for (let i = 0; i < gallery.length; i++) {
+        console.log(i);
         let galleryName = gallery[i].childNodes[0].childNodes[0].innerText;
         console.log(galleryName);
         if (galleryName.toUpperCase().indexOf(filter) > -1) {
-            gallery[i].parentElement.style.display = 'block';
+            gallery[i].style.display = 'block';
         } else {
-            gallery[i].parentElement.style.display = 'none';
+            gallery[i].style.display = 'none';
         }
     }
 }
 
 export function pageSearch(event) {
     let input = event.target.value.toUpperCase();
+
+    // Keep search box open
     if (input.length > 0) {
         event.target.classList.add('complete');
     } else {
@@ -45,7 +45,6 @@ export function pageSearch(event) {
     } catch (error) {
         console.log(error);
     }
-    console.log(input);
 
     if (input.match(/IMAGE:/g)) {
         gallerySearch('');
