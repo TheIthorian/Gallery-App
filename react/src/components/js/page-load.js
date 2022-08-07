@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", function(e) {
-
+document.addEventListener('DOMContentLoaded', function (e) {
     // let acc = document.getElementsByClassName('gallery-toggle');
     // for (let i = 0; i < acc.length; i++) {
     //     let toggleButton = acc[i];
@@ -10,11 +9,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
     //         content.style.maxHeight = content.scrollHeight + "px";
     //     }
     // }
-
-
     // // gallery toggle function
     // acc = document.getElementsByClassName('gallery-toggle');
-
     // for (let i = 0; i < acc.length; i++) {
     //     acc[i].addEventListener("click", function () {
     //         this.classList.toggle("active");
@@ -29,5 +25,4 @@ document.addEventListener("DOMContentLoaded", function(e) {
     //         console.log(" ");
     //     });
     // }
-    
-})
+});
