@@ -1,6 +1,4 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { __esModule } from 'react-script-tag/lib/ScriptTag';
 import Popup from './popup.js';
 
 import editIcon from '../img/edit.svg';
@@ -52,7 +50,7 @@ class ImageSizeCheckbox extends React.Component {
     render() {
         return (
             <div className='image-size-toggle'>
-                <img className='active' src={sizeLarge} />
+                <img className='active' src={sizeLarge} alt='large icons' />
                 <label className='switch'>
                     <input
                         type='checkbox'
@@ -62,7 +60,7 @@ class ImageSizeCheckbox extends React.Component {
                     />
                     <span class='slider'></span>
                 </label>
-                <img src={sizeSmall} />
+                <img src={sizeSmall} alt='small icons' />
             </div>
         );
     }
@@ -237,6 +235,7 @@ class Image extends React.Component {
                         value={imageData.ImageId}
                         onClick={this.handleRemoveImage}
                         className='left'
+                        alt='remove'
                     />
                     <span className='title-text'>{imageData.Title}</span>
                     <input
@@ -245,6 +244,7 @@ class Image extends React.Component {
                         value={imageData.ImageId}
                         onClick={this.togglePopup}
                         className='right'
+                        alt='edit'
                     />
                 </span>
                 <Popup
@@ -526,7 +526,7 @@ class Gallery extends React.Component {
 
         let areGalleryImagesSmall = document.getElementById('image-scale').checked;
 
-        while (content && content.tagName != 'button') {
+        while (content && content.tagName !== 'button') {
             content.childNodes[1].style.display = !areGalleryImagesSmall ? 'block' : 'none';
 
             if (this.isGalleryOpen) {
@@ -575,13 +575,13 @@ class Gallery extends React.Component {
                         </button>
                         <button class='image-count custom'>[{imageList.length}]</button>
                         <button className='action custom' onClick={this.toggleRemovePopup}>
-                            <img src={removeIcon} />
+                            <img src={removeIcon} alt='remove gallery' />
                         </button>
                         <button className='action custom' onClick={this.togglePopup}>
-                            <img src={addIcon} />
+                            <img src={addIcon} alt='add gallery' />
                         </button>
                         <button className='action custom' onClick={this.toggleUpdatePopup}>
-                            <img src={editIcon} />
+                            <img src={editIcon} alt='edit gallery' />
                         </button>
                     </div>
                     {imageList.map(image => (
@@ -953,7 +953,7 @@ class ImageModal extends React.Component {
     render() {
         return (
             <div id='selected-image-modal' className='modal'>
-                <img className='modal-content' id='modal-image' />
+                <img className='modal-content' id='modal-image' alt='selected' />
                 <div id='caption'></div>
                 <button
                     className='image-navigation image-left custom'
