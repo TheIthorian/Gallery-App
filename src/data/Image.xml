@@ -2,8 +2,8 @@
 <Root>
 	<Query Name="ImageInsert">
 		<SQL>
-INSERT INTO Image (Title, URL, Path, Status, GalleryId, UserId, AddedByUserId)
-	VALUES (%(Title)s, %(URL)s, %(Path)s, %(Status)s, %(GalleryId)s, %(UserId)s, %(AddedByUserId)s)
+INSERT INTO Image (Title, URL, Path, Suffix, Width, Height, Status, GalleryId, UserId, AddedByUserId)
+	VALUES (%(Title)s, %(URL)s, %(Path)s, %(Suffix)s, %(Width)s, %(Height)s, %(Status)s, %(GalleryId)s, %(UserId)s, %(AddedByUserId)s)
 		</SQL>
 	</Query>		
 	<Query Name="DeleteImage">
@@ -70,7 +70,10 @@ SELECT
   ImageId,
   Title, 
   URL,
-  Path
+  Path,  
+  Suffix, 
+  Width, 
+  Height
 FROM Image
 WHERE ImageId = %(ImageId)s 
 AND Status = 1
@@ -82,7 +85,10 @@ SELECT
   ImageId,
   Title, 
   URL,
-  Path
+  Path,
+  Suffix, 
+  Width, 
+  Height
 FROM Image
 WHERE UserId = %(UserId)s
 AND Status = 1
@@ -91,7 +97,10 @@ SELECT
   ImageId,
   Title, 
   URL,
-  Path
+  Path,
+  Suffix, 
+  Width, 
+  Height
 FROM Image
 WHERE UserId is NULL
 AND Status = 1
@@ -103,7 +112,10 @@ SELECT
   I.ImageId,
   I.Title, 
   I.URL,
-  I.Path
+  I.Path,
+  I.Suffix, 
+  I.Width, 
+  I.Height
 FROM Image I
 WHERE I.UserId = %(UserId)s
 AND I.GalleryId = %(GalleryId)s

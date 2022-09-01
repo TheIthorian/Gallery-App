@@ -1,14 +1,18 @@
+import base64
+import io
+import os
+import uuid
 import server
+from PIL import Image
+import requests
 
-from config import mysql # remove
+from config import mysql
+from user import UserProfile # remove
+from encryption import decrypt, encrypt, generate_key
 
-
-
-
-def addImage (inputs, userProfile):
+def addImage (inputs, userProfile: UserProfile):
 
     responsePayload = server.ResponsePayload()
-
 
     # Data Auths
     if not server.serverConnection.dataAuthorisation("UserGalleryId", userProfile.userId, inputs['GalleryId']):
@@ -37,14 +41,24 @@ def addImage (inputs, userProfile):
     else:
         publicImageUserId = None
 
+    title = inputs['Title']
+    url  = inputs['URL']
+    garllery_id = inputs['GalleryId']
+
+    filename = f"{uuid.uuid4().hex}"
+
+    image_data = save_image_to_file(url, filename, userProfile)
 
     # Insert the image data           
     queryInputs = {
-        'Title':inputs['Title'], 
-        'URL':inputs['URL'], 
-        'Path':'xx',  # Curently unused. Will be used for file path to uploaded image
+        'Title': title, 
+        'URL':url, 
+        'Path':filename,
+        'Suffix':image_data.mode,
+        'Width':image_data.size[0],
+        'Height':image_data.size[1],
         'Status':1, 
-        'GalleryId':inputs['GalleryId'],
+        'GalleryId':garllery_id,
         'UserId':userProfile.userId,
         'AddedByUserId':userProfile.userId
     }
@@ -54,7 +68,7 @@ def addImage (inputs, userProfile):
     image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]
 
     responsePayload.messages.append( {  
-        'GalleryId' : inputs['GalleryId'],
+        'GalleryId' : garllery_id,
         'ImageId': image['ImageId'],
         'Title': image['Title'], 
         'URL': image['URL'],
@@ -130,7 +144,7 @@ def getImages (galleryId, userProfile):
             'ImageId': image['ImageId'],
             'Title': image['Title'], 
             'URL': image['URL'],
-            'Image': '0' 
+            'Image': get_image_from_file(image['Path'], userProfile, image['Suffix'], image['Width'], image['Height'])
         })
 
     return [
@@ -166,6 +180,43 @@ def removeImage (inputs, userProfile):
         output, 
         None]       
          
+
+def save_image_to_file(url: str, filename: str, userProfile: UserProfile) -> Image:
+    image_data = Image.open(requests.get(url, stream=True).raw)
+
+
+    key = generate_key(userProfile.password)
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(dir_path, '..', 'images', filename + '.img')
+    encrypt(file_path, image_data.tobytes(), key)
+
+    return image_data
+
+
+def get_image_from_file(filename: str, userProfile: UserProfile, mode, width, height) -> base64:
+    if (filename is None or filename == 'xx'):
+        return None
+
+    key = generate_key(userProfile.password)
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(dir_path, '..', 'images', filename + '.img')
+
+    image_data = decrypt(file_path, key)
+
+
+    if image_data is None:
+        return None
+
+    image = Image.frombytes(mode=mode, size=[width, height], data=image_data)
+
+    image_file = io.BytesIO()
+    image.save(image_file, format="PNG")
+    img = base64.b64encode(image_file.getvalue()).decode('ascii')
+
+    return img
+
 
 
 def addGallery (inputs, userProfile):
