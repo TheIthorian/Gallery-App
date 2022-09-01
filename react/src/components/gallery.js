@@ -228,7 +228,11 @@ class Image extends React.Component {
                     loading='lazy'
                     onClick={this.handleClick}
                     className='gallery-image'
-                    src={imageData.URL}
+                    src={
+                        imageData.Image
+                            ? `data:image/png;base64, ${imageData.Image}`
+                            : imageData.URL
+                    }
                     alt={imageData.Title}
                 />
                 <span className='title'>
