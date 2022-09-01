@@ -6,7 +6,6 @@ import server
 from PIL import Image
 import requests
 
-from config import mysql
 from user import UserProfile # remove
 from encryption import decrypt, encrypt, generate_key
 
