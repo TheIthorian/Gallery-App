@@ -18,6 +18,7 @@ class UserProfile ():
         self.email = None
         self.userId = None
         self.authenticated = False
+        self.password = None
         self.admin = False
 
     
@@ -32,6 +33,7 @@ class UserProfile ():
                 self.userId = result['UserId']
                 self.username = result['Username']
                 self.emaAuthenticated = True
+                self.password = result['HashedPassword']
                 if result['AdminInd'] == 6: self.admin = True
             else:
                 raise ValueError('Could not find the user security profile')
@@ -41,6 +43,7 @@ class UserProfile ():
             self.userId = -1
             self.username = "DummyUsername"
             self.emaAuthenticated = True
+            self.password = None
             self.admin = False
 
 

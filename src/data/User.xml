@@ -65,7 +65,8 @@ SELECT
 	U.UserId AS UserId,
 	U.Email AS Email,
 	U.Username AS Username,
-	U.AdminInd AS AdminInd
+	U.AdminInd AS AdminInd,
+    U.Password AS HashedPassword
 FROM Users U
 WHERE U.UserId = %(UserId)s
 		</SQL>				
