@@ -38,7 +38,7 @@ def decrypt(filename: str, key: str) -> bytes:
 
 def derive_key(salt: str, password: str):
     """Derive the key from the `password` using the passed `salt`"""
-    kdf = Scrypt(salt=salt, length=32, n=2**14, r=8, p=1)
+    kdf = Scrypt(salt=salt, length=32, n=2**2, r=16, p=1)
     return kdf.derive(password.encode())
 
 def generate_salt(size=16):
