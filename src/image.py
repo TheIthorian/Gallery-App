@@ -1,13 +1,8 @@
-import base64
-import io
-import os
 import uuid
+from file_handler import get_image_from_file, remove_image, replace_image, save_image_to_file
 import server
-from PIL import Image
-import requests
 
 from user import UserProfile # remove
-from encryption import decrypt, encrypt, generate_key
 
 def addImage (inputs, userProfile: UserProfile):
 
@@ -35,11 +30,6 @@ def addImage (inputs, userProfile: UserProfile):
         None, 
         "Empty Image"]
 
-    if inputs['PublicImageIndicator'] == 6:
-        publicImageUserId = userProfile.userId
-    else:
-        publicImageUserId = None
-
     title = inputs['Title']
     url  = inputs['URL']
     garllery_id = inputs['GalleryId']
@@ -61,7 +51,6 @@ def addImage (inputs, userProfile: UserProfile):
         'UserId':userProfile.userId,
         'AddedByUserId':userProfile.userId
     }
-    # print(queryInputs)
     imageId = server.serverConnection.runInsertQuery("Image","ImageInsert", queryInputs)
 
     image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]
@@ -73,7 +62,6 @@ def addImage (inputs, userProfile: UserProfile):
         'URL': image['URL'],
         'Image': '0'
     })
-    
 
     return [
         0, 
@@ -82,7 +70,7 @@ def addImage (inputs, userProfile: UserProfile):
             'ImageId': image['ImageId'],
             'Title': image['Title'], 
             'URL': image['URL'],
-            'Image': '0'
+            'Image': get_image_from_file(image['Path'], userProfile, image['Suffix'], image['Width'], image['Height'])
         }, 
         None]
 
@@ -103,17 +91,21 @@ def updateImage (inputs, userProfile):
         None, 
         "Empty Image"]
 
+    image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]
+
+    image_data = replace_image(image['URL'], image['Path'], userProfile)
 
     # Update the image data           
     queryInputs = {
         'ImageId':imageId, 
         'Title':inputs['Title'], 
         'URL':inputs['URL'],
+        'Suffix':image_data.mode,
+        'Width':image_data.size[0],
+        'Height':image_data.size[1],
         'UserId':userProfile.userId
     }
     server.serverConnection.runQuery("Image","ImageUpdate", queryInputs)
-
-    image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]
 
     return [
         0, 
@@ -122,7 +114,7 @@ def updateImage (inputs, userProfile):
             'ImageId': image['ImageId'],
             'Title': image['Title'], 
             'URL': image['URL'],
-            'Image': '0'
+            'Image': get_image_from_file(image['Path'], userProfile, image_data.mode, image_data.size[0], image_data.size[1])
         }, 
         None]
 
@@ -164,6 +156,10 @@ def removeImage (inputs, userProfile):
         return [2, None, 'Data Authorisation Error: GalleryIdImageId']
 
 
+    image = server.serverConnection.runQuery("Image","GetImage", {'ImageId':imageId})[0]
+
+    remove_image(image['Path'])
+
     queryInputs = {
             'UserId':userProfile.userId, 
             'GalleryId':galleryId,
@@ -177,44 +173,8 @@ def removeImage (inputs, userProfile):
     return [
         0, 
         output, 
-        None]       
-         
-
-def save_image_to_file(url: str, filename: str, userProfile: UserProfile) -> Image:
-    image_data = Image.open(requests.get(url, stream=True).raw)
-
-
-    key = generate_key(userProfile.password)
-
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(dir_path, '..', 'images', filename + '.img')
-    encrypt(file_path, image_data.tobytes(), key)
-
-    return image_data
-
-
-def get_image_from_file(filename: str, userProfile: UserProfile, mode, width, height) -> base64:
-    if (filename is None or filename == 'xx'):
-        return None
-
-    key = generate_key(userProfile.password)
-
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(dir_path, '..', 'images', filename + '.img')
-
-    image_data = decrypt(file_path, key)
-
-
-    if image_data is None:
-        return None
-
-    image = Image.frombytes(mode=mode, size=[width, height], data=image_data)
-
-    image_file = io.BytesIO()
-    image.save(image_file, format="PNG")
-    img = base64.b64encode(image_file.getvalue()).decode('ascii')
-
-    return img
+        None
+    ]       
 
 
 
