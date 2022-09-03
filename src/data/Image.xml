@@ -42,25 +42,16 @@ WHERE GalleryId = %(GalleryId)s
 AND UserId = %(UserId)s
 		</SQL>
 	</Query>	
-	<Query Name="GetImage">
-		<SQL>
-SELECT 
-  ImageId,
-  Title, 
-  URL,
-  Path
-FROM Image
-WHERE ImageId = %(ImageId)s
-AND Status = 1
-		</SQL>
-	</Query>
 	<Query Name="ImageUpdate">
 		<SQL>	
-UPDATE Image 
-SET 
+UPDATE Image
+SET
 Title = %(Title)s,
-URL = %(URL)s
-WHERE ImageId = %(ImageId)s 
+URL = %(URL)s,
+Suffix = %(Suffix),
+Width = %(Width),
+Height = %(Height)
+WHERE ImageId = %(ImageId)s
 AND UserId = %(UserId)s
 		</SQL>
 	</Query>	
@@ -73,7 +64,9 @@ SELECT
   Path,  
   Suffix, 
   Width, 
-  Height
+  Height,
+  Status,
+  GalleryId
 FROM Image
 WHERE ImageId = %(ImageId)s 
 AND Status = 1
@@ -88,7 +81,9 @@ SELECT
   Path,
   Suffix, 
   Width, 
-  Height
+  Height,
+  Status,
+  GalleryId
 FROM Image
 WHERE UserId = %(UserId)s
 AND Status = 1
@@ -100,7 +95,9 @@ SELECT
   Path,
   Suffix, 
   Width, 
-  Height
+  Height,
+  Status,
+  GalleryId
 FROM Image
 WHERE UserId is NULL
 AND Status = 1
@@ -115,7 +112,9 @@ SELECT
   I.Path,
   I.Suffix, 
   I.Width, 
-  I.Height
+  I.Height,
+  I.Status,
+  I.GalleryId
 FROM Image I
 WHERE I.UserId = %(UserId)s
 AND I.Status = 1
