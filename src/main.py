@@ -1,7 +1,7 @@
-#---------------------
+# ---------------------
 # Component: main.py
 # Description: Communication between web and Backend
-#---------------------
+# ---------------------
 
 """
 Todo:
@@ -24,13 +24,11 @@ import base64
 from datetime import datetime
 
 
-
-
 # Output[0] = Result Type
-  # 0: Success
-  # 1: Info
-  # 2: Warning
-  # 3: Internal Error
+# 0: Success
+# 1: Info
+# 2: Warning
+# 3: Internal Error
 # Output[1] = Message
 # Output[2] = Error Message
 def formatOutput(output):
@@ -38,25 +36,25 @@ def formatOutput(output):
     # Warning
     if output[0] == 3:
         return jsonify({
-            'Result':output[2],
-            'InternalError':True
+            'Result': output[2],
+            'InternalError': True
         })
     if output[0] == 2:
         return jsonify({
-            'Result':output[2]
+            'Result': output[2]
         })
     # Info
     elif output[0] == 1:
         return jsonify({
-            'Message':output[1],
-            'Result':output[2]
-            })
+            'Message': output[1],
+            'Result': output[2]
+        })
     # Success
     else:
         return jsonify({
-            'Message':output[1],
-            'Result':'Success'
-            })
+            'Message': output[1],
+            'Result': 'Success'
+        })
 
 
 def formatOutputs(outputs):
@@ -68,25 +66,25 @@ def formatOutputs(outputs):
         if output[0] == 3:
 
             message.append({
-                'Result':output[2],
-                'InternalError':True
+                'Result': output[2],
+                'InternalError': True
             })
         if output[0] == 2:
             message.append({
-                'Result':output[2]
+                'Result': output[2]
             })
         # Info
         elif output[0] == 1:
             message.append({
-                'Message':output[1],
-                'Result':output[2]
-                })
+                'Message': output[1],
+                'Result': output[2]
+            })
         # Success
         else:
             message.append({
-                'Message':output[1],
-                'Result':'Success'
-                })
+                'Message': output[1],
+                'Result': 'Success'
+            })
 
     return jsonify(message)
 
@@ -117,7 +115,8 @@ def printRequest(request):
         print("unable to print data: ", str(e))
 
     try:
-        print("Authorization: ", request.authorization.username, request.authorization.password)
+        print("Authorization: ", request.authorization.username,
+              request.authorization.password)
     except Exception as e:
         print("No authorisation present: ", str(e))
 
@@ -144,21 +143,20 @@ def validateSchema(schema, data):
     try:
         validate(instance=data, schema=schema)
         return [True, None]
-    except Exception as e :
+    except Exception as e:
         result = str(e)
         return [False, result[:result.index("\n")]]
-
 
 
 # Called before request is processed
 @app.before_request
 def before_request_callback():
 
-    #if request.method == "OPTIONS":
-        #return
+    # if request.method == "OPTIONS":
+    # return
 
     g.userId = -1
-    
+
     printData = False
     #printData = True
 
@@ -171,12 +169,13 @@ def before_request_callback():
             app.logger.debug('EndPoint: %s', request.endpoint)
             app.logger.debug('Headers: %s', request.headers)
             app.logger.debug('Body: %s', request.get_data())
-            
 
         # Authenticate user details
-        if not hasattr(view_func, '_excludeUserAuthentication'): # Ingore methods that can be done without user auth
-            
-            sessionId = None if request.headers.get('sessionId') is None else request.headers.get('sessionId')
+        # Ingore methods that can be done without user auth
+        if not hasattr(view_func, '_excludeUserAuthentication'):
+
+            sessionId = None if request.headers.get(
+                'sessionId') is None else request.headers.get('sessionId')
 
             if request.authorization:
                 username = None if request.authorization.username is None else request.authorization.username
@@ -187,27 +186,31 @@ def before_request_callback():
 
             # Initialise user profile
             userProfile = user.UserProfile()
-            verified = userProfile.authenticateUser(sessionId, username, password)
+            verified = userProfile.authenticateUser(
+                sessionId, username, password)
             if not verified:
-                return jsonify({'Error':'Unable to authenticate user'})
+                return jsonify({'Error': 'Unable to authenticate user'})
 
             g.userId = userProfile.userId
 
-                                                                                   
+
 # Called before response is output to web service. Formats BE outputs
 @app.after_request
 def after_request(response):
-    #printResponse(response)
+    # printResponse(response)
 
     response.headers.set('Access-Control-Allow-Origin', '*')
     response.headers['Access-Control-Allow-Request-Headers'] = '*'
     response.headers["Access-Control-Allow-Credentials"] = "true"
     response.headers["Access-Control-Allow-Methods"] = "GET, HEAD, OPTIONS, POST, PUT, DELETE"
-    response.headers.add('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Access-Control-Allow-Headers')
     response.headers.add('Access-Control-Allow-Headers', 'Origin')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-    response.headers.add('Access-Control-Allow-Headers', 'Access-Control-Request-Method')
-    response.headers.add('Access-Control-Allow-Headers', 'Access-Control-Request-Headers')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Access-Control-Request-Method')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Access-Control-Request-Headers')
     response.headers.add('Access-Control-Allow-Headers', 'Accept')
     response.headers.add('Access-Control-Allow-Headers', 'X-Requested-With')
     response.headers.add('Access-Control-Allow-Headers', 'sessionId')
@@ -216,15 +219,12 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'status')
     response.headers.add('Access-Control-Allow-Headers', 'authorization')
 
-    #response.headers["Access-Control-Allow-Headers"] = ["Access-Control-Allow-Headers", "Origin", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers", 
-    #"Accept", "X-Requested-With", "sessionId", "password", "username", "status", "authorization"]
-    
+    # response.headers["Access-Control-Allow-Headers"] = ["Access-Control-Allow-Headers", "Origin", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers",
+    # "Accept", "X-Requested-With", "sessionId", "password", "username", "status", "authorization"]
+
     #esponse.headers['X-Content-Type-Options'] = 'nosniff'
 
     return response
-
-
-
 
 
 ################################################
@@ -236,15 +236,14 @@ def excludeUserAuthentication(function):
     return function
 
 
-
 ################################################
 # Debug function
 ################################################
 @app.route('/Debug/<int:repeats>', methods=["POST"])
 @excludeUserAuthentication
-def debug (repeats):
+def debug(repeats):
 
-    return ({'Message':'None'})
+    return ({'Message': 'None'})
 
     userProfile = user.UserProfile()
     userProfile.constructUserProfile(22)
@@ -260,8 +259,7 @@ def debug (repeats):
         }
         image.addImage(inputs, userProfile)
 
-
-    return ({'Message':'Inserted (' + len(imageList) + ') images'})
+    return ({'Message': 'Inserted (' + len(imageList) + ') images'})
 
     for i in range(0, repeats):
         galleryId = 101
@@ -285,10 +283,7 @@ def debug (repeats):
         }
         image.addImage(inputs, userProfile)
 
-    return ({'Message':'Inserted (' + str(repeats) + ') images'})
-
-
-
+    return ({'Message': 'Inserted (' + str(repeats) + ') images'})
 
 
 ################################################
@@ -309,7 +304,8 @@ def _register():
     username = requestSchema['Username'].strip()
     password = requestSchema['Password'].strip()
 
-    sessionId = None if request.headers.get('sessionId') is None else request.headers.get('sessionId')
+    sessionId = None if request.headers.get(
+        'sessionId') is None else request.headers.get('sessionId')
 
     # Register the user
     output = user.register(email, username, password, sessionId)
@@ -335,15 +331,14 @@ def _login():
 
     if not loginResult['verified']:
         return formatOutput([2, None, loginResult['error']])
-    
+
     # SessionId saved to DB
 
     output = [0, sessionId, None]
 
     output = formatOutput(output)
-    
-    return output
 
+    return output
 
 
 @app.route('/Logout', methods=["POST"])
@@ -351,21 +346,18 @@ def _login():
 def _logout():
 
     userProfile = user.UserProfile()
-    
+
     sessionId = request.headers.get('sessionId')
     userProfile.sessionLogin(sessionId)
 
     if not userProfile.userLogout():
         return formatOutput([2, None, 'Unable to log out'])
-    
+
     output = [0, 'Logout succesful', None]
 
     output = formatOutput(output)
-    
+
     return output
-
-
-
 
 
 ################################################
@@ -376,21 +368,21 @@ def _logout():
 # AddGallery
 # GetGallery
 
-#---------------
+# ---------------
 # Images
 
 @app.route('/Gallery/<int:galleryId>/AddImage', methods=["POST"])
 def _addImage(galleryId):
 
     schema = {
-        "type" : "object",
-        "properties" : {
-            "Title" : {"type" : "string", "maxLength" : 45},
-            "URL" : {"type" : "string", "maxLength" : 32000}
-            #"PublicImageIndicator" : {}
-            #"Image" : {}
-            },
-        "required" : ["Title"]
+        "type": "object",
+        "properties": {
+            "Title": {"type": "string", "maxLength": 45},
+            "URL": {"type": "string", "maxLength": 32000}
+            # "PublicImageIndicator" : {}
+            # "Image" : {}
+        },
+        "required": ["Title"]
     }
 
     requestData = request.json
@@ -398,8 +390,7 @@ def _addImage(galleryId):
     if not result[0]:
         return formatOutput([2, None, result[1]])
 
-
-    userProfile = user.UserProfile()    
+    userProfile = user.UserProfile()
     userProfile.constructUserProfile(int(g.userId))
 
     requestData = request.json
@@ -411,15 +402,15 @@ def _addImage(galleryId):
         'Image': requestData['Image'],
         'PublicImageIndicator': requestData['PublicImageIndicator']
     }
-    
+
     output = image.addImage(inputs, userProfile)
-        
+
     return formatOutput(output)
 
 
 @app.route('/Gallery/<int:galleryId>/Image/<int:imageId>/Update', methods=["POST"])
 def _updateImage(galleryId, imageId):
-    userProfile = user.UserProfile()    
+    userProfile = user.UserProfile()
     userProfile.constructUserProfile(int(g.userId))
 
     requestData = request.json
@@ -430,21 +421,20 @@ def _updateImage(galleryId, imageId):
         'Title': requestData['Title'],
         'URL': requestData['URL']
     }
-    
-    output = image.updateImage(inputs, userProfile)
-    
-    return formatOutput(output)
 
+    output = image.updateImage(inputs, userProfile)
+
+    return formatOutput(output)
 
 
 @app.route('/GetImages', methods=["GET"])
 @app.route('/Gallery/<int:galleryId>/Images', methods=["GET"])
-def _getImages(galleryId = -1):
+def _getImages(galleryId=-1):
 
     if g.userId is None:
         return formatOutput([3, None, 'Unable to authenticate user'])
 
-    userProfile = user.UserProfile()    
+    userProfile = user.UserProfile()
     userProfile.constructUserProfile(int(g.userId))
 
     output = image.getImages(galleryId, userProfile)
@@ -457,36 +447,35 @@ def _removeImage(galleryId, imageId):
     if g.userId is None:
         return formatOutput([3, None, 'Unable to authenticate user'])
 
-    userProfile = user.UserProfile()    
-    userProfile.constructUserProfile(int(g.userId))    
+    userProfile = user.UserProfile()
+    userProfile.constructUserProfile(int(g.userId))
 
     inputs = {
-        'ImageId':imageId,
-        'GalleryId':galleryId
+        'ImageId': imageId,
+        'GalleryId': galleryId
     }
 
     output = image.removeImage(inputs, userProfile)
 
     return formatOutput(output)
 
-#----------------
+# ----------------
 
 
-
-#----------------
+# ----------------
 # Gallery
 
 @app.route('/AddGallery', methods=["POST"])
 def _addGallery():
 
-    #https://json-schema.org/understanding-json-schema/
-    
+    # https://json-schema.org/understanding-json-schema/
+
     schema = {
-        "type" : "object",
-        "properties" : {
-            "Title" : {"type" : "string", "maxLength" : 45}
-            },
-        "required" : ["Title"]
+        "type": "object",
+        "properties": {
+            "Title": {"type": "string", "maxLength": 45}
+        },
+        "required": ["Title"]
     }
 
     requestData = request.json
@@ -494,8 +483,7 @@ def _addGallery():
     if not result[0]:
         return formatOutput([2, None, result[1]])
 
-
-    userProfile = user.UserProfile()    
+    userProfile = user.UserProfile()
     userProfile.constructUserProfile(int(g.userId))
 
     # Validate inputs - should use open source for this
@@ -503,36 +491,36 @@ def _addGallery():
         return [0, None, 'Title must be less than 45 characters']
 
     inputs = {'Title': requestData['Title']}
-    
+
     output = image.addGallery(inputs, userProfile)
-        
+
     return formatOutput(output)
 
 
-@app.route('/GetGallery/', methods=["GET"]) # All galleries
-@app.route('/GetGallery/<int:galleryId>', methods=["GET"]) # specific gallery
-def _getGallery(galleryId = -1):
+@app.route('/GetGallery/', methods=["GET"])  # All galleries
+@app.route('/GetGallery/<int:galleryId>', methods=["GET"])  # specific gallery
+def _getGallery(galleryId=-1):
 
     if g.userId is None:
         return formatOutput([3, None, 'Unable to authenticate user'])
 
-    userProfile = user.UserProfile()    
-    userProfile.constructUserProfile(int(g.userId))    
+    userProfile = user.UserProfile()
+    userProfile.constructUserProfile(int(g.userId))
 
-    output = image.getGallery({'GalleryId':galleryId}, userProfile)
+    output = image.getGallery({'GalleryId': galleryId}, userProfile)
 
     return formatOutput(output)
 
 
 @app.route('/UpdateGallery/', methods=["POST"])
 @app.route('/UpdateGallery/<int:galleryId>', methods=["POST"])
-def _updateGallery(galleryId = -1):
+def _updateGallery(galleryId=-1):
     schema = {
-        "type" : "object",
-        "properties" : {
-            "Title" : {"type" : "string", "maxLength" : 45}
-            },
-        "required" : ["Title"]
+        "type": "object",
+        "properties": {
+            "Title": {"type": "string", "maxLength": 45}
+        },
+        "required": ["Title"]
     }
 
     requestData = request.json
@@ -540,27 +528,26 @@ def _updateGallery(galleryId = -1):
     if not result[0]:
         return formatOutput([2, None, result[1]])
 
-
     if g.userId is None:
         return formatOutput([3, None, 'Unable to authenticate user'])
 
-    userProfile = user.UserProfile()    
-    userProfile.constructUserProfile(int(g.userId))    
+    userProfile = user.UserProfile()
+    userProfile.constructUserProfile(int(g.userId))
 
     requestData = request.json
 
     inputs = []
     if galleryId < 0:
-        
+
         for message in requestData['Message']:
             inputs.append({
-                'GalleryId' : message['GalleryId'],
-                'Title' : message['Title']
+                'GalleryId': message['GalleryId'],
+                'Title': message['Title']
             })
     else:
         inputs.append({
-            'GalleryId' : galleryId,
-            'Title' : requestData['Title']
+            'GalleryId': galleryId,
+            'Title': requestData['Title']
         })
 
     output = image.updateGallery(inputs, userProfile)
@@ -570,37 +557,33 @@ def _updateGallery(galleryId = -1):
 
 @app.route('/RemoveGallery/', methods=["POST"])
 @app.route('/RemoveGallery/<int:galleryId>', methods=["POST"])
-def _removeGallery(galleryId = -1):
+def _removeGallery(galleryId=-1):
 
     if g.userId is None:
         return formatOutput([3, None, 'Unable to authenticate user'])
 
-    userProfile = user.UserProfile()    
-    userProfile.constructUserProfile(int(g.userId))    
+    userProfile = user.UserProfile()
+    userProfile.constructUserProfile(int(g.userId))
 
     requestData = request.json
 
     inputs = []
     if galleryId < 0:
-        
+
         for message in requestData:
             inputs.append({
-                'GalleryId' : message['GalleryId']
+                'GalleryId': message['GalleryId']
             })
     else:
         inputs.append({
-            'GalleryId' : galleryId
+            'GalleryId': galleryId
         })
 
     output = image.removeGallery(inputs, userProfile)
 
     return formatOutput(output)
 
-#----------------
-
-
-
-
+# ----------------
 
 
 @app.errorhandler(404)
@@ -612,8 +595,7 @@ def not_found(error=None):
     respone = jsonify(message)
     respone.status_code = 404
     return respone
-        
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
-
-        
