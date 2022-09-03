@@ -3,21 +3,13 @@ import cryptography
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
-def encrypt_xor(filename: str, file_data: bytes, password: str):
+def encrypt_xor(file_data: bytes, password: str) -> bytes:
     from itertools import cycle
-
-    encrypted_data = bytes(a ^ ord(b) for a, b in zip(file_data, cycle(password)))
-    
-    with open(filename, "xb") as file:
-        file.write(encrypted_data)
+    return bytes(a ^ ord(b) for a, b in zip(file_data, cycle(password)))
 
 
-def decrypt_xor(filename: str, password: str):
+def decrypt_xor(encrypted_data: bytes, password: str) -> bytes:
     from itertools import cycle
-
-    with open(filename, "rb") as file:
-        encrypted_data = file.read()
-    
     return bytes(a ^ ord(b) for a, b in zip(encrypted_data, cycle(password)))
 
 
@@ -30,7 +22,7 @@ def encrypt(file_data: bytes, password: str):
     return f.encrypt(file_data)    
 
 
-def decrypt(encrypted_data: str, password: str) -> bytes:
+def decrypt(encrypted_data: bytes, password: str) -> bytes:
     """
     Given a filename (str) and key (bytes), it decrypts the file
     """
@@ -48,7 +40,7 @@ def decrypt(encrypted_data: str, password: str) -> bytes:
 
 def derive_key(salt: str, password: str):
     """Derive the key from the `password` using the passed `salt`"""
-    kdf = Scrypt(salt=salt, length=32, n=2**2, r=16, p=1)
+    kdf = Scrypt(salt=salt, length=32, n=2**4, r=16, p=1)
     return kdf.derive(password.encode())
 
 def generate_salt(size=16):
