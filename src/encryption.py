@@ -32,6 +32,15 @@ def decrypt(encrypted_data: bytes, key: str) -> bytes:
     return decrypted_data
 
 
+def generate_key(password: str):
+    """
+    Generates a key from a `password`.
+    """
+    salt = generate_salt()
+    derived_key = derive_key(salt, password)
+    return base64.urlsafe_b64encode(derived_key)
+
+
 def derive_key(salt: str, password: str):
     kdf = Scrypt(salt=salt, length=32, n=2**4, r=16, p=1)
     return kdf.derive(password.encode())
@@ -40,20 +49,3 @@ def derive_key(salt: str, password: str):
 def generate_salt(size: int = 16):
     # return secrets.token_bytes(size)
     return b'\xdf\x06\xb24\x03G/Q\xfd\xa1\xf6\xf0\xc4\xf8f\xbb'
-
-
-def load_salt():
-    return open("salt.salt", "rb").read()
-
-
-def generate_key(password: str):
-    """
-    Generates a key from a `password`.
-    """
-    salt = generate_salt()
-
-    # generate the key from the salt and the password
-    derived_key = derive_key(salt, password)
-
-    # encode it using Base 64 and return it
-    return base64.urlsafe_b64encode(derived_key)
