@@ -1,6 +1,8 @@
+from dataclasses import dataclass
 import uuid
 from file_handler import get_image_from_file, remove_image, replace_image, save_image_to_file
 import server
+from typing import Type, TypeVar
 
 from user import UserProfile
 
@@ -62,7 +64,6 @@ class Image:
 
 
 def addImage(inputs, userProfile: UserProfile):
-
     responsePayload = server.ResponsePayload()
 
     # Data Auths
@@ -74,7 +75,7 @@ def addImage(inputs, userProfile: UserProfile):
             'Description': 'Data Authorisation Error: UserGalleryId'
         }
 
-        return [2, None, 'Data Authorisation Error: UserGalleryId']  # remove
+        return [2, None, 'Data Authorisation Error: UserGalleryId']
 
     if inputs['Image'] is None:
         inputs['Image'] = ""
@@ -87,55 +88,42 @@ def addImage(inputs, userProfile: UserProfile):
                 None,
                 "Empty Image"]
 
-    title = inputs['Title']
-    url = inputs['URL']
-    garllery_id = inputs['GalleryId']
+    image = Image()
+    image.title = inputs['Title']
+    image.url = inputs['URL']
+    image.gallery_id = inputs['GalleryId']
+    image.path = f"{uuid.uuid4().hex}"
 
-    filename = f"{uuid.uuid4().hex}"
-
-    image_data = save_image_to_file(url, filename, userProfile)
+    image.image_data = save_image_to_file(image.url, image.path, userProfile)
 
     # Insert the image data
-    queryInputs = {
-        'Title': title,
-        'URL': url,
-        'Path': filename,
-        'Suffix': image_data.mode,
-        'Width': image_data.size[0],
-        'Height': image_data.size[1],
-        'Status': 1,
-        'GalleryId': garllery_id,
-        'UserId': userProfile.userId,
-        'AddedByUserId': userProfile.userId
-    }
-    imageId = server.serverConnection.runInsertQuery(
-        "Image", "ImageInsert", queryInputs)
+    image.id = image.insert(userProfile)
 
-    image = server.serverConnection.runQuery(
-        "Image", "GetImage", {'ImageId': imageId})[0]
+    # image = Image.from_model(server.serverConnection.runQuery(
+    #     "Image", "GetImage", {'ImageId':  image.id})[0])
 
     responsePayload.messages.append({
-        'GalleryId': garllery_id,
-        'ImageId': image['ImageId'],
-        'Title': image['Title'],
-        'URL': image['URL'],
+        'GalleryId': image.gallery_id,
+        'ImageId': image.id,
+        'Title': image.title,
+        'URL': image.url,
         'Image': '0'
     })
 
     try:
         image_data = get_image_from_file(
-            image['Path'], userProfile, image['Suffix'], image['Width'], image['Height'])
+            image.path, userProfile, image.mode, image.width, image.height)
     except:
         image_data = None
 
     return [
         0,
         {
-            'GalleryId': inputs['GalleryId'],
-            'ImageId': image['ImageId'],
-            'Title': image['Title'],
-            'URL': image['URL'],
-            'Image':image_data
+            'GalleryId': image.gallery_id,
+            'ImageId': image.id,
+            'Title': image.title,
+            'URL': image.url,
+            'Image': image_data
         },
         None]
 
