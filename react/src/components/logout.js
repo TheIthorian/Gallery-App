@@ -20,7 +20,7 @@ function Logout() {
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            if (data.Result == 'Success') {
+            if (data.Result === 'Success') {
                 localStorage.setItem('isLoggedIn', false);
                 requestOptions.localStorage.setItem('sessionId', '');
                 alert('Logout Successful');
