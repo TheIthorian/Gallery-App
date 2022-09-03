@@ -3,10 +3,9 @@ import cryptography
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
-def encrypt(filename: str, file_data, key: bytes):
-    """
-    Encrypts the file_data and write it to file
-    """
+def encrypt_xor(filename: str, file_data: bytes, password: str):
+    key = generate_key(password)
+
     f = Fernet(key)
     print(f, key)
 
@@ -16,10 +15,26 @@ def encrypt(filename: str, file_data, key: bytes):
         file.write(encrypted_data)
 
 
-def decrypt(filename: str, key: str) -> bytes:
+def encrypt(filename: str, file_data, password: str):
+    """
+    Encrypts the file_data and write it to file
+    """
+    key = generate_key(password)
+
+    f = Fernet(key)
+
+    encrypted_data = f.encrypt(file_data)
+
+    with open(filename, "xb") as file:
+        file.write(encrypted_data)
+
+
+def decrypt(filename: str, password: str) -> bytes:
     """
     Given a filename (str) and key (bytes), it decrypts the file
     """
+    key = generate_key(password)
+
     f = Fernet(key)
     print(f, key)
 
