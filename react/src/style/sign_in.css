@@ -59,6 +59,10 @@ p.hidden {
     display: none;
 }
 
+button {
+    cursor: pointer;
+}
+
 button.primary {
     width: 100%;
     margin: 0;
