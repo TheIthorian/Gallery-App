@@ -72,7 +72,10 @@ def replace_image(url: str, filename: str, userProfile: UserProfile) -> Image:
 
     remove_image(filename)
 
-    encrypt(file_path, image_data.tobytes(), userProfile.password)
+    encrypted_data = encrypt(image_data.tobytes(), userProfile.password)
+
+    with open(file_path, "xb") as file:
+        file.write(encrypted_data)
 
     return image_data
 
