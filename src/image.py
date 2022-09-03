@@ -188,19 +188,20 @@ def getImages(galleryId, userProfile):
     output = []
 
     for image in images:
+        image = Image.from_model(image)
 
         try:
-            print(f"get_image_from_file: [{image['ImageId']}] {image['Path']}")
+            print(f"get_image_from_file: [{image.id}] {image.path}")
             image_data = get_image_from_file(
-                image['Path'], userProfile, image['Suffix'], image['Width'], image['Height'])
+                image.path, userProfile, image.mode, image.width, image.height)
         except:
             image_data = None
 
         output.append({
             'GalleryId': galleryId,
-            'ImageId': image['ImageId'],
-            'Title': image['Title'],
-            'URL': image['URL'],
+            'ImageId': image.id,
+            'Title': image.title,
+            'URL': image.url,
             'Image': image_data
         })
 
