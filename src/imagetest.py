@@ -8,10 +8,13 @@ import requests
 from config import mysql
 import pymysql
 
-from encryption import decrypt, encrypt, generate_key
+from encryption import decrypt, decrypt_xor, encrypt, encrypt_xor
+from file_handler import get_image_from_file, rescale_image
 from image import save_image_to_file
 
 IMAGE_URL = 'https://pixeljoint.com/files/icons/small__r1485254581.png'
+LARGE_IMAGE_URL = 'https://www.northlight-images.co.uk/wp-content/uploads/2015/05/pan_h_002336_lake-20x53p.jpg'
+
 USER_PROFILE = {
     'password': 'password'
 }
@@ -25,25 +28,28 @@ image_before = Img()
 image_after = Img()
 
 def test_encrypt():
-    image = Image.open(requests.get(IMAGE_URL, stream=True).raw)
+    large_image = Image.open(requests.get(LARGE_IMAGE_URL, stream=True).raw)
+    image = rescale_image(large_image)
     image_before.mode = image.mode
     image_before.size = image.size
     image_before.data = image.tobytes()
 
-    key = generate_key(USER_PROFILE['password'])
-
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(dir_path, 'test_encrypted' + '.img')
-    encrypt(file_path, image_before.data, key)
+    file_path = os.path.join(dir_path,'test_encrypted' + '.img')
+
+    ecnrypted_data = encrypt(image.tobytes(), USER_PROFILE['password'])
+    with open(file_path, "xb") as file:
+        file.write(ecnrypted_data)
 
 
 def test_decrypt():
-    key = generate_key(USER_PROFILE['password'])
-    
     dir_path = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(dir_path,'test_encrypted' + '.img')
     
-    image_data = decrypt(file_path, key)
+    with open(file_path, "rb") as file:
+        encrypted_data = file.read()
+
+    image_data = decrypt(encrypted_data, USER_PROFILE['password'])
 
     image = Image.frombytes(mode=image_before.mode, size=image_before.size, data=image_data)
     image_after.mode = image.mode
@@ -55,7 +61,6 @@ def test_decrypt():
     image_file = io.BytesIO()
     image.save(image_file, format="PNG")
     img = base64.b64encode(image_file.getvalue())
-    print(img)
 
 
 def save_image(image_row):
@@ -100,14 +105,36 @@ def save_all():
         save_image(image)
 
 
+def change_encryption():
+    query = '''SELECT I.ImageId, I.URL, I.Path, I.Suffix, I.Width, I.Height, U.UserId, U.username, U.Password
+    FROM Image I JOIN Users U on U.UserId = I.userId 
+    ORDER BY U.UserId, I.ImageId'''
+
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(query)
+    result = cursor.fetchall()
+    conn.commit()
+    cursor.close()
+    conn.close()
+    all_images = result
+
+    class UserProfile:
+        def __init__(self, password):
+            self.password = password
+
+    for image in all_images:
+        print(image)
+        try:
+            save_image_to_file(image['URL'], image['Path'], UserProfile(image['Password']))
+        except:
+            continue
+
+
 if __name__ == '__main__':
     # test_encrypt()
     # test_decrypt()
 
-    save_all()
+    # save_all()
 
-
-
-
-
-    
+    # change_encryption()
