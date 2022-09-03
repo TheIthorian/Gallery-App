@@ -14,18 +14,12 @@ def decrypt_xor(encrypted_data: bytes, password: str) -> bytes:
 
 
 def encrypt(file_data: bytes, password: str):
-    """
-    Encrypts the file_data and write it to file
-    """
     key = generate_key(password)
     f = Fernet(key)
     return f.encrypt(file_data)    
 
 
 def decrypt(encrypted_data: bytes, password: str) -> bytes:
-    """
-    Given a filename (str) and key (bytes), it decrypts the file
-    """
     key = generate_key(password)
     f = Fernet(key)
 
@@ -39,19 +33,17 @@ def decrypt(encrypted_data: bytes, password: str) -> bytes:
 
 
 def derive_key(salt: str, password: str):
-    """Derive the key from the `password` using the passed `salt`"""
     kdf = Scrypt(salt=salt, length=32, n=2**4, r=16, p=1)
     return kdf.derive(password.encode())
 
-def generate_salt(size=16):
+def generate_salt(size: int = 16):
     # return secrets.token_bytes(size)
     return b'\xdf\x06\xb24\x03G/Q\xfd\xa1\xf6\xf0\xc4\xf8f\xbb'
 
 def load_salt():
-    # load salt from salt.salt file
     return open("salt.salt", "rb").read()
 
-def generate_key(password):
+def generate_key(password: str):
     """
     Generates a key from a `password`.
     """
