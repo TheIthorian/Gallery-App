@@ -12,7 +12,7 @@ Todo:
 
 from app import app
 from flask import jsonify, request
-from flask import jsonify, flash, request, g
+from flask import jsonify, request, g
 from jsonschema import validate
 
 # App components
@@ -20,7 +20,6 @@ import user
 import image
 
 # Functional libraries
-import base64
 from datetime import datetime
 
 
