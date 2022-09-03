@@ -132,6 +132,7 @@ def change_encryption():
 
 
 if __name__ == '__main__':
+    pass
     # test_encrypt()
     # test_decrypt()
 
