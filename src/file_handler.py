@@ -10,15 +10,6 @@ from encryption import decrypt, decrypt_xor, encrypt, encrypt_xor
 MAX_WIDTH = 800
 
 
-def rescale_image(image: Image) -> Image:
-    if image.size[0] > MAX_WIDTH:
-        width_percent = MAX_WIDTH / float(image.size[0])
-        height = int((float(image.size[1]) * float(width_percent)))
-        return image.resize((MAX_WIDTH, height), Image.ANTIALIAS)
-
-    return image
-
-
 def save_image_to_file(url: str, filename: str, userProfile: UserProfile, encryption_mode='Fernet') -> Image:
     image_data = rescale_image(Image.open(requests.get(url, stream=True).raw))
 
@@ -35,6 +26,15 @@ def save_image_to_file(url: str, filename: str, userProfile: UserProfile, encryp
         file.write(encrypted_data)
 
     return image_data
+
+
+def rescale_image(image: Image) -> Image:
+    if image.size[0] > MAX_WIDTH:
+        width_percent = MAX_WIDTH / float(image.size[0])
+        height = int((float(image.size[1]) * float(width_percent)))
+        return image.resize((MAX_WIDTH, height), Image.ANTIALIAS)
+
+    return image
 
 
 def get_image_from_file(filename: str, userProfile: UserProfile, mode, width, height, encryption_mode='Fernet') -> base64:
