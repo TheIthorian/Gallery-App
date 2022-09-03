@@ -4,15 +4,21 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 def encrypt_xor(filename: str, file_data: bytes, password: str):
-    key = generate_key(password)
+    from itertools import cycle
 
-    f = Fernet(key)
-    print(f, key)
-
-    encrypted_data = f.encrypt(file_data)
-
+    encrypted_data = bytes(a ^ ord(b) for a, b in zip(file_data, cycle(password)))
+    
     with open(filename, "xb") as file:
         file.write(encrypted_data)
+
+
+def decrypt_xor(filename: str, password: str):
+    from itertools import cycle
+
+    with open(filename, "rb") as file:
+        encrypted_data = file.read()
+    
+    return bytes(a ^ ord(b) for a, b in zip(encrypted_data, cycle(password)))
 
 
 def encrypt(filename: str, file_data, password: str):
