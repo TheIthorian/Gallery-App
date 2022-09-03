@@ -29,19 +29,15 @@ class Image:
 
     @classmethod
     def from_model(cls: Type[T], row) -> T:
-        return cls(id=row['id'],
+        return cls(id=row['ImageId'],
                    title=row['Title'],
                    url=row['URL'],
                    path=row['Path'],
                    mode=row['Suffix'],
-                   original_width=row['OriginalWidth'],
-                   original_height=row['OriginalHeight'],
                    width=row['Width'],
                    height=row['Height'],
                    status=row['Status'],
-                   gallery_id=row['GalleryId'],
-                   user_id=row['UserId'],
-                   added_by=row['AddedBy'])
+                   gallery_id=row['GalleryId'])
 
     def insert(self, userProfile: UserProfile) -> int:
         queryInputs = {
@@ -99,9 +95,6 @@ def addImage(inputs, userProfile: UserProfile):
     # Insert the image data
     image.id = image.insert(userProfile)
 
-    # image = Image.from_model(server.serverConnection.runQuery(
-    #     "Image", "GetImage", {'ImageId':  image.id})[0])
-
     responsePayload.messages.append({
         'GalleryId': image.gallery_id,
         'ImageId': image.id,
@@ -129,46 +122,55 @@ def addImage(inputs, userProfile: UserProfile):
 
 
 def updateImage(inputs, userProfile):
-
-    imageId = inputs['ImageId']
+    new_image = Image(id=inputs['ImageId'],
+                      title=inputs['Title'],
+                      url=inputs['URL'],
+                      gallery_id=inputs['GalleryId'])
 
     # Data Auths
-    if not server.serverConnection.dataAuthorisation("UserGalleryId", userProfile.userId, inputs['GalleryId']):
+    if not server.serverConnection.dataAuthorisation("UserGalleryId", userProfile.userId, new_image.gallery_id):
         return [2, None, 'Data Authorisation Error: UserGalleryId']
 
-    if not server.serverConnection.dataAuthorisation("GalleryIdImageId", inputs['GalleryId'], imageId):
+    if not server.serverConnection.dataAuthorisation("GalleryIdImageId", new_image.gallery_id, new_image.id):
         return [2, None, 'Data Authorisation Error: GalleryIdImageId']
 
-    if len(inputs['URL']) == 0:
+    if len(new_image.url) == 0:
         return [2,
                 None,
                 "Empty Image"]
 
-    image = server.serverConnection.runQuery(
-        "Image", "GetImage", {'ImageId': imageId})[0]
+    existing_image = Image.from_model(server.serverConnection.runQuery(
+        "Image", "GetImage", {'ImageId': new_image.id})[0])
 
-    image_data = replace_image(image['URL'], image['Path'], userProfile)
+    new_image.image_data = replace_image(
+        new_image.url, existing_image.path, userProfile)
 
     # Update the image data
     queryInputs = {
-        'ImageId': imageId,
-        'Title': inputs['Title'],
-        'URL': inputs['URL'],
-        'Suffix': image_data.mode,
-        'Width': image_data.size[0],
-        'Height': image_data.size[1],
+        'ImageId': new_image.id,
+        'Title': new_image.title,
+        'URL': new_image.url,
+        'Suffix': new_image.image_data.mode,
+        'Width': new_image.image_data.size[0],
+        'Height': new_image.image_data.size[1],
         'UserId': userProfile.userId
     }
-    server.serverConnection.runQuery("Image", "ImageUpdate", queryInputs)
+    server.serverConnection.runQuery(
+        "Image", "ImageUpdate", queryInputs)  # This is not working??
 
     return [
         0,
         {
-            'GalleryId': inputs['GalleryId'],
-            'ImageId': image['ImageId'],
-            'Title': image['Title'],
-            'URL': image['URL'],
-            'Image': get_image_from_file(image['Path'], userProfile, image_data.mode, image_data.size[0], image_data.size[1])
+            'GalleryId': new_image.gallery_id,
+            'ImageId': new_image.id,
+            'Title': new_image.title,
+            'URL': new_image.url,
+            'Image': get_image_from_file(
+                new_image.path,
+                userProfile,
+                new_image.image_data.mode,
+                new_image.image_data.size[0],
+                new_image.image_data.size[1])
         },
         None]
 
