@@ -21,32 +21,21 @@ def decrypt_xor(filename: str, password: str):
     return bytes(a ^ ord(b) for a, b in zip(encrypted_data, cycle(password)))
 
 
-def encrypt(filename: str, file_data, password: str):
+def encrypt(file_data: bytes, password: str):
     """
     Encrypts the file_data and write it to file
     """
     key = generate_key(password)
-
     f = Fernet(key)
-
-    encrypted_data = f.encrypt(file_data)
-
-    with open(filename, "xb") as file:
-        file.write(encrypted_data)
+    return f.encrypt(file_data)    
 
 
-def decrypt(filename: str, password: str) -> bytes:
+def decrypt(encrypted_data: str, password: str) -> bytes:
     """
     Given a filename (str) and key (bytes), it decrypts the file
     """
     key = generate_key(password)
-
     f = Fernet(key)
-    print(f, key)
-
-
-    with open(filename, "rb") as file:
-        encrypted_data = file.read()
 
     try:
         decrypted_data = f.decrypt(encrypted_data)

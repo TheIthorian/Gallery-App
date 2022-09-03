@@ -13,7 +13,10 @@ def save_image_to_file(url: str, filename: str, userProfile: UserProfile) -> Ima
     dir_path = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(dir_path, '..', 'images', filename + '.img')
 
-    encrypt(file_path, image_data.tobytes(), userProfile.password)
+    encrypted_data = encrypt(image_data.tobytes(), userProfile.password)
+
+    with open(file_path, "xb") as file:
+        file.write(encrypted_data)
 
     return image_data
 
@@ -27,7 +30,11 @@ def get_image_from_file(filename: str, userProfile: UserProfile, mode, width, he
     dir_path = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(dir_path, '..', 'images', filename + '.img')
 
-    image_data = decrypt(file_path, userProfile.password)
+
+    with open(file_path, "rb") as file:
+        encrypted_data = file.read()
+
+    image_data = decrypt(encrypted_data, userProfile.password)
 
     if image_data is None:
         return None
