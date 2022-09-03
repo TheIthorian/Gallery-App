@@ -118,6 +118,7 @@ SELECT
   I.Height
 FROM Image I
 WHERE I.UserId = %(UserId)s
+AND I.Status = 1
 AND I.GalleryId = %(GalleryId)s
 		</SQL>
 	</Query>
@@ -137,7 +138,7 @@ ORDER BY G.AddedDate
 SELECT 
   G.GalleryId,
   G.Title,
- (SELECT Count(I.ImageId) FROM Image I WHERE I.GalleryId = G.GalleryId) AS ImageCount
+ (SELECT Count(I.ImageId) FROM Image I WHERE I.GalleryId = G.GalleryId AND I.Status = 1) AS ImageCount
 FROM Gallery G
   WHERE G.UserId = %(UserId)s
   AND G.GalleryId = %(GalleryId)s
