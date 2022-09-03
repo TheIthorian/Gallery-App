@@ -5,22 +5,22 @@ from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from itertools import cycle
 
 
-def encrypt_xor(file_data: bytes, password: str) -> bytes:
-    return bytes(a ^ ord(b) for a, b in zip(file_data, cycle(password)))
+def encrypt_xor(file_data: bytes, key: str) -> bytes:
+    return bytes(a ^ ord(b) for a, b in zip(file_data, cycle(key)))
 
 
-def decrypt_xor(encrypted_data: bytes, password: str) -> bytes:
-    return bytes(a ^ ord(b) for a, b in zip(encrypted_data, cycle(password)))
+def decrypt_xor(encrypted_data: bytes, key: str) -> bytes:
+    return bytes(a ^ ord(b) for a, b in zip(encrypted_data, cycle(key)))
 
 
-def encrypt(file_data: bytes, password: str):
-    key = generate_key(password)
+def encrypt(file_data: bytes, key: str):
+    key = generate_key(key)
     f = Fernet(key)
     return f.encrypt(file_data)
 
 
-def decrypt(encrypted_data: bytes, password: str) -> bytes:
-    key = generate_key(password)
+def decrypt(encrypted_data: bytes, key: str) -> bytes:
+    key = generate_key(key)
     f = Fernet(key)
 
     try:
