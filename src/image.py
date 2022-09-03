@@ -63,6 +63,11 @@ def addImage (inputs, userProfile: UserProfile):
         'Image': '0'
     })
 
+    try:
+        image_data = get_image_from_file(image['Path'], userProfile, image['Suffix'], image['Width'], image['Height'])
+    except:
+        image_data = None
+
     return [
         0, 
         {   
@@ -70,7 +75,7 @@ def addImage (inputs, userProfile: UserProfile):
             'ImageId': image['ImageId'],
             'Title': image['Title'], 
             'URL': image['URL'],
-            'Image': get_image_from_file(image['Path'], userProfile, image['Suffix'], image['Width'], image['Height'])
+            'Image':image_data
         }, 
         None]
 
@@ -130,12 +135,19 @@ def getImages (galleryId, userProfile):
     output = []
 
     for image in images:
+
+        try:
+            print(f"get_image_from_file: [{image['ImageId']}] {image['Path']}")
+            image_data = get_image_from_file(image['Path'], userProfile, image['Suffix'], image['Width'], image['Height'])
+        except:
+            image_data = None
+
         output.append({
             'GalleryId' : galleryId,
             'ImageId': image['ImageId'],
             'Title': image['Title'], 
             'URL': image['URL'],
-            'Image': get_image_from_file(image['Path'], userProfile, image['Suffix'], image['Width'], image['Height'])
+            'Image': image_data
         })
 
     return [
