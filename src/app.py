@@ -6,8 +6,6 @@ from flask_cors import CORS, cross_origin
 from flask_caching import Cache
 
 
-
-
 app = Flask(__name__)
 
 cache = Cache(app)
@@ -17,4 +15,3 @@ CORS(app)
 app.config['DEBUG'] = False
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['CACHE_TYPE'] = 'simple'
-
