@@ -13,3 +13,4 @@ src/venv/
 src/venv_old/
 src/__pycache__/
 src/config.py
+react/src/components/constants.js
