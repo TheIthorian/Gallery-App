@@ -19,13 +19,16 @@ USER_PROFILE = {
     'password': 'password'
 }
 
+
 class Img:
     mode: str
     size: tuple[int, int]
     data: bytes
-    
+
+
 image_before = Img()
 image_after = Img()
+
 
 def test_encrypt():
     large_image = Image.open(requests.get(LARGE_IMAGE_URL, stream=True).raw)
@@ -35,7 +38,7 @@ def test_encrypt():
     image_before.data = image.tobytes()
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(dir_path,'test_encrypted' + '.img')
+    file_path = os.path.join(dir_path, 'test_encrypted' + '.img')
 
     ecnrypted_data = encrypt(image.tobytes(), USER_PROFILE['password'])
     with open(file_path, "xb") as file:
@@ -44,14 +47,15 @@ def test_encrypt():
 
 def test_decrypt():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(dir_path,'test_encrypted' + '.img')
-    
+    file_path = os.path.join(dir_path, 'test_encrypted' + '.img')
+
     with open(file_path, "rb") as file:
         encrypted_data = file.read()
 
     image_data = decrypt(encrypted_data, USER_PROFILE['password'])
 
-    image = Image.frombytes(mode=image_before.mode, size=image_before.size, data=image_data)
+    image = Image.frombytes(mode=image_before.mode,
+                            size=image_before.size, data=image_data)
     image_after.mode = image.mode
     image_after.size = image.size
     image_after.data = image.tobytes()
@@ -126,7 +130,8 @@ def change_encryption():
     for image in all_images:
         print(image)
         try:
-            save_image_to_file(image['URL'], image['Path'], UserProfile(image['Password']))
+            save_image_to_file(image['URL'], image['Path'],
+                               UserProfile(image['Password']))
         except:
             continue
 
