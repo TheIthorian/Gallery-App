@@ -1,4 +1,5 @@
 import React from 'react';
+import { API_URL } from './constants';
 
 import '../style/header.css';
 import '../style/sign_in.css';
@@ -80,6 +81,8 @@ function SignIn() {
         // Prevent changing location
         event.preventDefault();
 
+        error.display = false;
+
         if (!username || !password) {
             error.wording = 'Please provide a username and password';
             error.display = true;
@@ -113,10 +116,9 @@ function SignIn() {
 
         //console.log(requestOptions.body);
 
-        fetch('http://127.0.0.1:5000/Login', requestOptions)
+        fetch(API_URL + '/Login', requestOptions)
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if (data.Result === 'Success') {
                     localStorage.setItem('sessionId', sessionId);
                     localStorage.setItem('isLoggedIn', true);
@@ -131,13 +133,16 @@ function SignIn() {
                     updateError();
                 }
             })
-            .catch(console.log);
+            .catch(err => alert('error: ' + JSON.stringify(err)));
     }
 
     function handleSubmitSignUp(event) {
         event.preventDefault();
 
         if (!username || !password) {
+            error.wording = 'Username and password required';
+            error.display = true;
+            error.type = 'warning';
             return;
         }
 
@@ -151,6 +156,7 @@ function SignIn() {
             error.wording = 'Invalid email';
             error.display = true;
             error.type = 'warning';
+            console.printLog('Invalid email');
             updateError();
             return;
         }
@@ -159,6 +165,7 @@ function SignIn() {
             error.wording = 'Password must be at least 5 characters long';
             error.display = true;
             error.type = 'warning';
+            console.printLog('Invalid password');
             updateError();
             return;
         }
@@ -170,7 +177,7 @@ function SignIn() {
             sessionId = generateId();
         }
 
-        console.log(sessionId);
+        console.printLog(sessionId);
 
         let requestOptions = {
             method: 'POST',
@@ -185,16 +192,15 @@ function SignIn() {
             }),
         };
 
-        console.log(requestOptions.body);
+        console.printLog('body: ', requestOptions.body);
 
-        fetch('http://127.0.0.1:5000/Register', requestOptions)
+        fetch(API_URL + '/Register', requestOptions)
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                console.printLog('register response: ', data);
                 if (data.Result === 'Success') {
                     localStorage.setItem('sessionId', sessionId);
                     localStorage.setItem('isLoggedIn', true);
-                    //alert('Login Successful')
                     window.location.href = '/';
                 } else {
                     error.wording = data.Result;
@@ -203,7 +209,8 @@ function SignIn() {
                     updateError();
                 }
             })
-            .catch(console.log);
+            .then(console.printLog('finished handleSubmitSignUp'))
+            .catch(err => console.printLog(err));
     }
 
     const error = {
@@ -222,6 +229,9 @@ function SignIn() {
 
     // Toggle between sign up page and register
     function toggleSignUp() {
+        console.printLog = function () {
+            return;
+        };
         console.log(createAccount);
 
         if (createAccount) {
@@ -302,7 +312,7 @@ function SignIn() {
                         <p id='ErrorMessage' hidden='true' className='error-message'></p>
                         <button
                             id='sign-in-action'
-                            type='submit'
+                            // type='submit'
                             className='primary'
                             onClick={handleSubmitSignIn}
                         >
@@ -310,12 +320,13 @@ function SignIn() {
                         </button>
                         <button
                             id='create-account-action'
-                            type='submit'
+                            // type='submit'
                             className='primary hidden'
                             onClick={handleSubmitSignUp}
                         >
                             Create Account
                         </button>
+                        <span style={{ color: 'white' }}></span>
                     </form>
                     <a href={link} id='homelink' hidden='true'>
                         Home

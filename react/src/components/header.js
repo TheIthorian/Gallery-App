@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 
 import { pageSearch } from './js/search.js';
+import { API_URL } from './constants';
 
 class SignUp extends React.Component {
     isLoggedIn() {
@@ -23,7 +24,7 @@ class SignUp extends React.Component {
             },
         };
 
-        fetch('http://127.0.0.1:5000/Logout', requestOptions)
+        fetch(API_URL + '/Logout', requestOptions)
             .then(res => res.json())
             .then(data => {
                 if (data.Result === 'Success') {

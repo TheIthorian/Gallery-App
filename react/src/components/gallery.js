@@ -7,9 +7,10 @@ import removeIcon from '../img/remove.svg';
 
 import sizeSmall from '../img/size-small.svg';
 import sizeLarge from '../img/size-large.svg';
+import { API_URL } from './constants.js';
 
 const settings = {
-    hostURL: 'http://127.0.0.1:5000/',
+    hostURL: API_URL + '/',
 };
 
 class ImageSizeCheckbox extends React.Component {

@@ -1,4 +1,7 @@
 // Logs user out of current session and changes location
+
+import { API_URL } from './constants';
+
 // ** Unused **
 function Logout() {
     let sessionId = localStorage.getItem('sessionId');
@@ -13,7 +16,7 @@ function Logout() {
 
     console.log(requestOptions.sessionId);
 
-    fetch('http://127.0.0.1:5000/Logout', requestOptions)
+    fetch(API_URL + '/Logout', requestOptions)
         .then(res => res.json())
         .then(data => {
             console.log(data);
