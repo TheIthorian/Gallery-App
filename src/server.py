@@ -1,7 +1,8 @@
 import xml.etree.cElementTree as ET
 import traceback
 import datetime
-import os, time
+import os
+import time
 import pymysql
 from config import mysql
 
@@ -13,8 +14,9 @@ Todo:
  - Add method to raiseError > UserErrorInsert
 """
 
+
 class ResponsePayload ():
-    
+
     def __init__(self):
 
         self.definitions = []
@@ -33,14 +35,13 @@ class ResponsePayload ():
         }
         """
 
-
     def formatOutput(self):
 
         output = {}
 
         if len(self.definitions) != 0:
             output['Definitions'] = self.definitions
-        
+
         if len(self.values) != 0:
             output['Values'] = self.values
 
@@ -50,17 +51,16 @@ class ResponsePayload ():
         if len(self.results) != 0:
             output['Results'] = self.results
         else:
-            output['Results'] = [{'Type':'Success'}]
+            output['Results'] = [{'Type': 'Success'}]
 
         return output
-
 
 
 class Server ():
 
     def __init__(self, root, serverConfigFile):
-        #ET.XMLParser(encoding='utf-8')
-        
+        # ET.XMLParser(encoding='utf-8')
+
         root = ET.parse(serverConfigFile).getroot()
         for child in root:
             if (child.tag == 'Server'):
@@ -77,27 +77,19 @@ class Server ():
         queries = {}
 
         for filename in os.listdir('./data'):
-
             fileLocation = './data/' + filename
-
             filename = filename[0:-4]
-
             queryList = {}
-
             root = ET.parse(fileLocation).getroot()
-            
+
             for child in root:
                 queryName = child.attrib['Name']
                 query = child.find('SQL').text
-                
                 queryList[queryName] = query
-            
+
             queries[filename] = queryList
- 
+
         self.SQLqueries = queries
-        
-
-
 
     def runQuery(self, file, queryName, inputs):
         conn = mysql.connect()
@@ -119,7 +111,6 @@ class Server ():
         conn.close()
         return result
 
-
     def runInsertQuery(self, file, queryName, inputs):
         conn = mysql.connect()
         query = self.SQLqueries[file][queryName]
@@ -130,33 +121,34 @@ class Server ():
         conn.commit()
         cursor.close()
         conn.close()
-        
+
         return result
-       
 
     def dataAuthorisation(self, authName, parentId, childId):
 
-        inputs = {'ParentId':parentId, 'ChildId':childId}
+        inputs = {'ParentId': parentId, 'ChildId': childId}
         try:
             result = self.runQuery("UserAuthorisation", authName, inputs)
         except Exception as e:
             print("\nData auth error: ", e)
-            print('Parameters: {Auth: ', authName, ', ParentId: ', parentId, ', ChildId: ', childId, '}\n')
+            print('Parameters: {Auth: ', authName, ', ParentId: ',
+                  parentId, ', ChildId: ', childId, '}\n')
             return False
 
-        #print(result)
-        if len(result) > 0: return True 
-        else: return False
- 
+        # print(result)
+        if len(result) > 0:
+            return True
+        else:
+            return False
 
-def GetQuery (file, queryName):
+
+def GetQuery(file, queryName):
 
     root = ET.parse('./data/' + file + '.xml').getroot()
     for child in root:
         if child.attrib['Name'] == queryName:
             return child.find('SQL').text
     raise Exception("Unable to locate query: " + file + ">" + queryName)
-
 
 
 global serverConnection
