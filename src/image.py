@@ -2,7 +2,63 @@ import uuid
 from file_handler import get_image_from_file, remove_image, replace_image, save_image_to_file
 import server
 
-from user import UserProfile  # remove
+from user import UserProfile
+
+T = TypeVar('T', bound='Image')
+
+
+@dataclass
+class Image:
+    id: int = None
+    title: str = None
+    url: str = None
+    path: str = None
+    mode: str = None
+    original_width: int = None
+    original_height: int = None
+    width: int = None
+    height: int = None
+    status: int = None
+    gallery_id: int = None
+    user_id: int = None
+    added_by: int = None
+
+    image_data: any = None  # PIL.Image
+
+    @classmethod
+    def from_model(cls: Type[T], row) -> T:
+        return cls(id=row['id'],
+                   title=row['Title'],
+                   url=row['URL'],
+                   path=row['Path'],
+                   mode=row['Suffix'],
+                   original_width=row['OriginalWidth'],
+                   original_height=row['OriginalHeight'],
+                   width=row['Width'],
+                   height=row['Height'],
+                   status=row['Status'],
+                   gallery_id=row['GalleryId'],
+                   user_id=row['UserId'],
+                   added_by=row['AddedBy'])
+
+    def insert(self, userProfile: UserProfile) -> int:
+        queryInputs = {
+            'Title': self.title,
+            'URL': self.url,
+            'Path': self.path,
+            'Suffix': self.image_data.mode,
+            'Width': self.image_data.size[0],
+            'Height': self.image_data.size[1],
+            'Status': 1,
+            'GalleryId': self.gallery_id,
+            'UserId': userProfile.userId,
+            'AddedByUserId': userProfile.userId
+        }
+        image_id = server.serverConnection.runInsertQuery(
+            "Image", "ImageInsert", queryInputs)
+
+        self.id = image_id
+        return image_id
 
 
 def addImage(inputs, userProfile: UserProfile):
