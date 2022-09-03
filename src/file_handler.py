@@ -4,8 +4,8 @@ import os
 from PIL import Image
 import requests
 
-from user import UserProfile # remove
-from encryption import decrypt, encrypt, generate_key
+from user import UserProfile
+from encryption import decrypt, encrypt
 
 def save_image_to_file(url: str, filename: str, userProfile: UserProfile) -> Image:
     image_data = Image.open(requests.get(url, stream=True).raw)
